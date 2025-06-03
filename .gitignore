@@ -1,0 +1,55 @@
+# Python libraries
+/app/__pycache__/
+/app/bin/
+/app/certifi/
+/app/certifi-2024.6.2.dist-info/
+/app/charset_normalizer/
+/app/charset_normalizer-3.3.2.dist-info/
+/app/idna/
+/app/idna-3.7.dist-info/
+/app/pytz/
+/app/pytz-2023.3.dist-info/
+/app/requests/
+/app/requests-2.32.3.dist-info/
+/app/urllib3/
+/app/urllib3-2.2.1.dist-info/
+/tmp/*
+
+# Terraform
+# Local .terraform directories
+# terraform/.terraform/*
+# terraform/.terraform*
+terraform/.terraform/
+terraform/files/
+
+# .tfstate files
+# *.tfstate
+# *.tfstate.*
+
+# Crash log files
+# crash.log
+# crash.*.log
+
+# Exclude all .tfvars files, which are likely to contain sensitive data, such as
+# password, private keys, and other secrets. These should not be part of version 
+# control as they are data points which are potentially sensitive and subject 
+# to change depending on the environment.
+# *.tfvars
+# *.tfvars.json
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+# override.tf
+# override.tf.json
+# *_override.tf
+# *_override.tf.json
+
+# Include override files you do wish to add to version control using negated pattern
+# !example_override.tf
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+# example: *tfplan*
+
+# Ignore CLI configuration files
+# .terraformrc
+# terraform.rc
