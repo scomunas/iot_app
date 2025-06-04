@@ -3,11 +3,11 @@
 ## retrieve for the app
 ######################################
 
-from modules import insert_db, ifttt_app, get_db
+from modules import insert_db, get_db
 import json
 import os
-from datetime import datetime, timedelta
-import pytz
+# from datetime import datetime, timedelta
+# import pytz
 import requests
 
 ## Set temperature registers in dynamoDB
@@ -21,7 +21,8 @@ def set_temperature(event, context):
 
     ## Check if body has the attributes
     if ("sensor" in body.keys() and
-        "temperature in body.keys()"):
+        "temperature" in body.keys()):
+        print("Body check OK")
         event = {
                     "sensor": body['sensor'],
                     "temperature": body['temperature']
@@ -36,13 +37,21 @@ def set_temperature(event, context):
         status = 200
         response_description = 'Registro de temperatura insertado'
     else:
+        print("Body check KO")
         status = 400
         response_description = 'Petición mal formada'
 
+    print("Status:")
+    print(status)
+    print("Reponse Description:")
+    print(response_description)
     return {
         "statusCode": status,
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+            "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,POST,DELETE"
         },
         "body": response_description
     }
@@ -50,19 +59,31 @@ def set_temperature(event, context):
 ## Set temperature registers in dynamoDB
 ## Netatmo registers will be askwd for 
 def fix_temperature(event, context):
+
+    # You will need a netatmo_token.json file in the root with these attributes:
+    # {
+    #     "CLIENT_ID": "xxxxxxxx",
+    #     "CLIENT_SECRET": "xxxxxxxxxxxxx",
+    #     "REFRESH_TOKEN": "xxxxxxxxxxxxxxxxx"
+    # }
+
     ## Get Event parameters
-    print("Set Temperature Event -------------------------------------------")
+    print("Set Temperature Event for Netatmo -------------------------------------------")
     # print(event)
     # body = json.loads(event["body"])
     # print(body)
 
     ## Check for temperature data with Netatmo
-    # TODO llevar esto a secrets
-    CLIENT_ID = '68341a0e7c35e6ca44045c72'
-    CLIENT_SECRET = 'IMhyhffoWqEKBHjVSR5LWjG6STXev4'
-    REFRESH_TOKEN = '567dc11465d1c4628ec91df2|7b236a795456f7f3f2aad241dcd55587'
+    # Get token data
+    filename = "netatmo_token.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    CLIENT_ID = data.get("CLIENT_ID")
+    CLIENT_SECRET = data.get("CLIENT_SECRET")
+    REFRESH_TOKEN = data.get("REFRESH_TOKEN")
 
     # Get new acces_token
+    print("Getting token from Netatmo")
     url = 'https://api.netatmo.com/oauth2/token'
     data = {
         'grant_type': 'refresh_token',
@@ -122,14 +143,23 @@ def fix_temperature(event, context):
             status = 200
             response_description = 'Registro de temperatura insertado'
 
+    print("Status:")
+    print(status)
+    print("Reponse Description:")
+    print(response_description)
     return {
         "statusCode": status,
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+            "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,POST,DELETE"
         },
         "body": response_description
     }
 
+## Get temperature registers from dynamoDB
+## no filter added, all registers will come 
 def get_temperature(event, context):
     ## Get Event parameters
     print("Set Temperature Event -------------------------------------------")

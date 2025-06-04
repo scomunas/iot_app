@@ -5,7 +5,7 @@ variable "versions" {
 
 variable "paths" {
   type    = list(string)
-  default = ["temperature"]
+  default = ["temperature", "blinds"]
 }
 
 variable "lambdas" {
@@ -37,6 +37,20 @@ variable "lambdas" {
       "version" : "v1",
       "apiPath" : "temperature",
       "apiMethod" : "GET"
+    },
+    "getBlindStatus" = {
+      "name" : "app-v1-get-blind-status",
+      "handler" : "blinds.get_blind_state",
+      "version" : "v1",
+      "apiPath" : "blinds",
+      "apiMethod" : "GET"
+    },
+    "setBlindPosition" = {
+      "name" : "app-v1-set-blind-position",
+      "handler" : "blinds.set_blind_position",
+      "version" : "v1",
+      "apiPath" : "blinds",
+      "apiMethod" : "POST"
     }
   }
 }

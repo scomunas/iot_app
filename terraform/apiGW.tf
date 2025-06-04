@@ -140,6 +140,10 @@ resource "aws_api_gateway_integration_response" "app_v1_cors_integration_respons
     "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,GET,PUT,POST,DELETE'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
+
+  depends_on = [
+    aws_api_gateway_integration.app_v1_cors_options_integration
+  ]
 }
 
 ##############################
@@ -155,7 +159,7 @@ resource "aws_api_gateway_usage_plan" "app_usage_plan" {
 
   api_stages {
     api_id = aws_api_gateway_rest_api.app_v1_rest_api.id
-    stage  = aws_api_gateway_deployment.app_v1_app_deployment.stage_name
+    stage  = aws_api_gateway_stage.app_v1_stage.stage_name
   }
 
   throttle_settings {
@@ -176,9 +180,31 @@ resource "aws_api_gateway_usage_plan_key" "app_usage_plan_key" {
 resource "aws_api_gateway_deployment" "app_v1_app_deployment" {
   depends_on = [
     aws_api_gateway_integration.app_v1_lambda_integration,
-    aws_api_gateway_integration.app_v1_cors_options_integration
+    aws_api_gateway_integration.app_v1_cors_options_integration,
+    aws_api_gateway_method_response.app_v1_cors_method_response,
+    aws_api_gateway_integration_response.app_v1_cors_integration_response
   ]
 
   rest_api_id = aws_api_gateway_rest_api.app_v1_rest_api.id
-  stage_name  = "prod"
+
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_method.app_v1_lambda_method,
+      aws_api_gateway_integration.app_v1_lambda_integration,
+      aws_api_gateway_method.app_v1_cors_options,
+      aws_api_gateway_integration.app_v1_cors_options_integration,
+      aws_api_gateway_method_response.app_v1_cors_method_response,
+      aws_api_gateway_integration_response.app_v1_cors_integration_response
+    ]))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_stage" "app_v1_stage" {
+  stage_name    = "prod"
+  rest_api_id   = aws_api_gateway_rest_api.app_v1_rest_api.id
+  deployment_id = aws_api_gateway_deployment.app_v1_app_deployment.id
 }

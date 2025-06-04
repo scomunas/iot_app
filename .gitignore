@@ -22,6 +22,10 @@
 terraform/.terraform/
 terraform/files/
 
+# Credentials file
+/app/netatmo_token.json
+/app/shelly_token.json
+
 # .tfstate files
 # *.tfstate
 # *.tfstate.*
