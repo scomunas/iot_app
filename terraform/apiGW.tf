@@ -125,6 +125,10 @@ resource "aws_api_gateway_method_response" "app_v1_cors_method_response" {
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
   }
+
+  depends_on = [
+    aws_api_gateway_integration.app_v1_cors_options_integration
+  ]
 }
 
 resource "aws_api_gateway_integration_response" "app_v1_cors_integration_response" {

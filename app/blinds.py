@@ -3,7 +3,7 @@
 ## 
 ######################################
 
-# from modules import insert_db, get_db
+from modules import ifttt_app
 import json
 import os
 # from datetime import datetime, timedelta
@@ -31,24 +31,37 @@ def get_blind_state(event, context):
     # params = event["queryStringParameters"]
     # print(params)
 
-    # Get token data
-    filename = "shelly_token.json"
+    # Get blind list
+    filename = "blind_list.json"
     with open(filename, "r") as f:
         data = json.load(f)
-    url_base = data.get("url")
-    api_key = data.get("api_key")
     blinds = data.get("blinds")
     # print(blinds)
 
-    response_description = {}
+    response_description = []
     status = 400
     for blind in blinds:
     ## Check if body has the attributes
-        if (blind['id'] == "aqara"):
+        if (blind['type'] == "aqara"):
             print("Persiana Aqara, no tiene status")
-            response_description[blind['name']] = 0
-        else:
+            status = 200
+            response_description.append(
+                {
+                    "name": blind['name'],
+                    "position": -1,
+                    "type": blind['type']
+                }
+            )
+        elif (blind['type'] == "shelly"):
             print("Persiana Shelly, obteniendo status")
+
+            # Get shelly token
+            filename = "shelly_token.json"
+            with open(filename, "r") as f:
+                data = json.load(f)
+            url_base = data.get("url")
+            api_key = data.get("api_key")
+            
             url = url_base + "/device/status"
             # print(url)
             payload = 'auth_key=' + api_key + '&id=' + blind['id']
@@ -65,11 +78,27 @@ def get_blind_state(event, context):
                 if(response_json['data']['online'] == True):
                     cover_data = response_json['data']['device_status']['cover:0']
                     status = 200
-                    response_description[blind['name']] = cover_data['current_pos']
+                    response_description.append(
+                        {
+                            "name": blind['name'],
+                            "position": cover_data['current_pos'],
+                            "type": blind['type']
+                        }
+                    )
             else:
                 print("Respuesta fallida por parte de Shelly")
                 status = 400
-                response_description[blind['name']] = 0
+                response_description.append(
+                    {
+                        "name": blind['name'],
+                        "position": 0,
+                        "type": blind['type']
+                    }
+                )
+        else:
+            print("Tipo de persiana no reconocido")
+            status = 400
+            response_description = 'Petición mal formada'
 
     print("Status:")
     print(status)
@@ -87,57 +116,121 @@ def get_blind_state(event, context):
     }
 
 
-## Set blind position
-## only for shelly
-## aqara only 100 for up and rest for down
+## Set blind position or action
+## position only for shelly
+## aqara only action
 def set_blind_position(event, context):
-    ## TODO
-    ## Accept calls for aqara blinds
-
     ## Get Event parameters
     print("Set Blind Position -------------------------------------------")
     # print(event)
     body = json.loads(event["body"])
     print(body)
 
-    # Get token data
-    filename = "shelly_token.json"
+    # Get blind list
+    filename = "blind_list.json"
     with open(filename, "r") as f:
         data = json.load(f)
-    url_base = data.get("url")
-    api_key = data.get("api_key")
     blinds = data.get("blinds")
-    # print(blinds)
 
    ## Check if body has the attributes
-    if ("blind" in body.keys() and
-        "position" in body.keys()):
-        print("Body check OK")
+    if ("blind" in body.keys()):
+        if ("position" in body.keys()):
+            print("Blind movement demanded by position")
+            print("Body check OK")
 
-        # Get blind ID if there is in the list
-        id = 'none'
-        for blind in blinds:
-            if (blind['name'] == body['blind']):
-                id = blind['id']
+            # Get blind ID if there is in the list
+            blind_id = 'none'
+            for blind in blinds:
+                if (blind['name'] == body['blind']):
+                    blind_id = blind['id']
+                    blind_type = blind['type']
 
-        if ((id != 'none') and (id != "aqara")):
-            url = url_base + "/device/relay/roller/settings/topos"
-            # print(url)
-            payload = 'auth_key=' + api_key + '&id=' + id + '&pos=' + body['position']
-            print(payload)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded'
-                }
+            if (blind_type == 'shelly'):
+                # Get token data
+                filename = "shelly_token.json"
+                with open(filename, "r") as f:
+                    data = json.load(f)
+                url_base = data.get("url")
+                api_key = data.get("api_key")
 
-            response = requests.request("POST", url, headers=headers, data=payload)
-            response_json = response.json()
+                url = url_base + "/device/relay/roller/settings/topos"
+                # print(url)
+                payload = 'auth_key=' + api_key + '&id=' + blind_id + '&pos=' + body['position']
+                # print(payload)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    }
 
-            status = 200
-            response_description = f"Persiana {body['blind']} fijada al {body['position']}"
+                response = requests.request("POST", url, headers=headers, data=payload)
+                response_json = response.json()
+
+                status = 200
+                response_description = f"Persiana {body['blind']} fijada al {body['position']}"
+            elif (blind_type == 'aqara'):
+                print("Aqara blind cannot be moved by position")
+                status = 400
+                response_description = 'No puedo mover la persiana Aqara por posición'
+            else:
+                print("Blind not found")
+                status = 400
+                response_description = 'No encuentro la persiana'
+        elif ("action" in body.keys()):
+            print("Blind movement demanded by action")
+            print("Body check OK")
+
+            # Get blind ID if there is in the list
+            blind_id = 'none'
+            for blind in blinds:
+                if (blind['name'] == body['blind']):
+                    blind_id = blind['id']
+                    blind_type = blind['type']
+
+            if (blind_type == 'aqara'):
+                print("Persiana Aqara")
+                body = {
+                        "blind": blind_id,
+                        "action": body['action']
+                    }
+                # print(body)
+                ifttt_app(
+                    key = "gcs4wieOf6v8rnA-CD8QbK3XP39vs_FIfnjvM-2Y6LA",
+                    app_name = "iot_v8_blinds",
+                    body = body
+                )
+
+                status = 200
+                response_description = f"Persiana {body['blind']} accionada para {body['action']}"
+            elif (blind_type == 'shelly'):
+                print("Persiana Shelly")
+
+                # Get token data
+                filename = "shelly_token.json"
+                with open(filename, "r") as f:
+                    data = json.load(f)
+                url_base = data.get("url")
+                api_key = data.get("api_key")
+
+                url = url_base + "/device/relay/roller/control"
+                # print(url)
+                payload = 'auth_key=' + api_key + '&id=' + blind_id + '&direction=' + body['action']
+                # print(payload)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+
+                response = requests.request("POST", url, headers=headers, data=payload)
+                response_json = response.json()
+
+                status = 200
+                response_description = f"Persiana {body['blind']} accionada para {body['action']}"
+            else:
+                print("Blind not found")
+                status = 400
+                response_description = 'No encuentro la persiana'
         else:
-            print("Blind not found")
+            print("Body check KO")
             status = 400
-            response_description = 'No encuentro la persiana o es aqara'
+            response_description = 'Petición mal formada'
     else:
         print("Body check KO")
         status = 400

@@ -1,0 +1,39 @@
+{
+    "blinds": [
+        {
+            "name": "comedor",
+            "type": "shelly",
+            "id": "a0dd6c28b7a0"
+        },
+        {
+            "name": "estudio",
+            "type": "shelly",
+            "id": "e465b89274f4"
+        },
+        {
+            "name": "invitados",
+            "type": "shelly",
+            "id": "fce8c0fe1250"
+        },
+        {
+            "name": "laura",
+            "type": "shelly",
+            "id": "fce8c0fdfce0"
+        },
+        {
+            "name": "nico",
+            "type": "shelly",
+            "id": "fce8c0fdf0a0"
+        },
+        {
+            "name": "papas",
+            "type": "shelly",
+            "id": "8813bfd406bc"
+        },
+        {
+            "name": "terraza",
+            "type": "aqara",
+            "id": "terraza"
+        }
+    ]
+}
