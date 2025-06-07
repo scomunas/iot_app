@@ -1,16 +1,16 @@
 {
   "version": 4,
   "terraform_version": "1.4.2",
-  "serial": 1966,
+  "serial": 1821,
   "lineage": "5de84fec-83e3-0190-472f-1badf288e108",
   "outputs": {
     "api_gateway_api_key": {
-      "value": "l4i1Zy9oOw6Py0JvwsBEp7jWGQmGtHuX4cGyz9Ck",
+      "value": "ZgZOvRmW2P3wUWUFmcgHG5y1Ue6LUIoo4YEZIXC9",
       "type": "string",
       "sensitive": true
     },
     "iot_api_gw_url": {
-      "value": "https://xtfc6kv4ij.execute-api.eu-central-1.amazonaws.com/",
+      "value": "https://5y6ik2qvoj.execute-api.eu-central-1.amazonaws.com/",
       "type": "string"
     }
   },
@@ -52,17 +52,17 @@
         {
           "schema_version": 0,
           "attributes": {
-            "arn": "arn:aws:apigateway:eu-central-1::/apikeys/resxip9up6",
-            "created_date": "2025-06-07T11:20:41Z",
+            "arn": "arn:aws:apigateway:eu-central-1::/apikeys/54sid7kyml",
+            "created_date": "2025-06-04T12:23:07Z",
             "customer_id": "",
             "description": "Managed by Terraform",
             "enabled": true,
-            "id": "resxip9up6",
-            "last_updated_date": "2025-06-07T11:20:41Z",
+            "id": "54sid7kyml",
+            "last_updated_date": "2025-06-04T12:23:07Z",
             "name": "app_api_key",
-            "tags": null,
+            "tags": {},
             "tags_all": {},
-            "value": "l4i1Zy9oOw6Py0JvwsBEp7jWGQmGtHuX4cGyz9Ck"
+            "value": "ZgZOvRmW2P3wUWUFmcgHG5y1Ue6LUIoo4YEZIXC9"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA=="
@@ -78,16 +78,16 @@
         {
           "schema_version": 0,
           "attributes": {
-            "created_date": "2025-06-07T11:20:55Z",
+            "created_date": "2025-06-07T10:49:14Z",
             "description": "",
-            "execution_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/",
-            "id": "lra1f8",
-            "invoke_url": "https://xtfc6kv4ij.execute-api.eu-central-1.amazonaws.com/",
-            "rest_api_id": "xtfc6kv4ij",
+            "execution_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/",
+            "id": "543fvm",
+            "invoke_url": "https://5y6ik2qvoj.execute-api.eu-central-1.amazonaws.com/",
+            "rest_api_id": "5y6ik2qvoj",
             "stage_description": null,
             "stage_name": null,
             "triggers": {
-              "redeployment": "e0ba5ab770b668796e94454d1b3890e021307c55"
+              "redeployment": "1d8394f2dbd77e794d63eeee02d430d95a3342bc"
             },
             "variables": null
           },
@@ -96,10 +96,14 @@
           "dependencies": [
             "aws_api_gateway_integration.app_v1_cors_options_integration",
             "aws_api_gateway_integration.app_v1_lambda_integration",
+            "aws_api_gateway_integration.cors",
             "aws_api_gateway_integration_response.app_v1_cors_integration_response",
+            "aws_api_gateway_integration_response.cors",
             "aws_api_gateway_method.app_v1_cors_options",
             "aws_api_gateway_method.app_v1_lambda_method",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_method_response.app_v1_cors_method_response",
+            "aws_api_gateway_method_response.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
             "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api",
@@ -119,148 +123,7 @@
       "type": "aws_api_gateway_integration",
       "name": "app_v1_cors_options_integration",
       "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "index_key": "v1/blinds",
-          "schema_version": 0,
-          "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "vj19me",
-            "connection_id": "",
-            "connection_type": "INTERNET",
-            "content_handling": "",
-            "credentials": "",
-            "http_method": "OPTIONS",
-            "id": "agi-xtfc6kv4ij-vj19me-OPTIONS",
-            "integration_http_method": "",
-            "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": {
-              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
-            },
-            "resource_id": "vj19me",
-            "rest_api_id": "xtfc6kv4ij",
-            "timeout_milliseconds": 29000,
-            "tls_config": [],
-            "type": "MOCK",
-            "uri": ""
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        },
-        {
-          "index_key": "v1/lights",
-          "schema_version": 0,
-          "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "gtq4hk",
-            "connection_id": "",
-            "connection_type": "INTERNET",
-            "content_handling": "",
-            "credentials": "",
-            "http_method": "OPTIONS",
-            "id": "agi-xtfc6kv4ij-gtq4hk-OPTIONS",
-            "integration_http_method": "",
-            "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": {
-              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
-            },
-            "resource_id": "gtq4hk",
-            "rest_api_id": "xtfc6kv4ij",
-            "timeout_milliseconds": 29000,
-            "tls_config": [],
-            "type": "MOCK",
-            "uri": ""
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        },
-        {
-          "index_key": "v1/sunrise",
-          "schema_version": 0,
-          "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "rp9ay7",
-            "connection_id": "",
-            "connection_type": "INTERNET",
-            "content_handling": "",
-            "credentials": "",
-            "http_method": "OPTIONS",
-            "id": "agi-xtfc6kv4ij-rp9ay7-OPTIONS",
-            "integration_http_method": "",
-            "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": {
-              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
-            },
-            "resource_id": "rp9ay7",
-            "rest_api_id": "xtfc6kv4ij",
-            "timeout_milliseconds": 29000,
-            "tls_config": [],
-            "type": "MOCK",
-            "uri": ""
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        },
-        {
-          "index_key": "v1/temperature",
-          "schema_version": 0,
-          "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "yinfda",
-            "connection_id": "",
-            "connection_type": "INTERNET",
-            "content_handling": "",
-            "credentials": "",
-            "http_method": "OPTIONS",
-            "id": "agi-xtfc6kv4ij-yinfda-OPTIONS",
-            "integration_http_method": "",
-            "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": {
-              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
-            },
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij",
-            "timeout_milliseconds": 29000,
-            "tls_config": [],
-            "type": "MOCK",
-            "uri": ""
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        }
-      ]
+      "instances": []
     },
     {
       "mode": "managed",
@@ -272,20 +135,20 @@
           "index_key": "fixTemperature",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "yinfda",
+            "cache_key_parameters": [],
+            "cache_namespace": "kheqer",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "PUT",
-            "id": "agi-xtfc6kv4ij-yinfda-PUT",
+            "id": "agi-5y6ik2qvoj-kheqer-PUT",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -311,20 +174,20 @@
           "index_key": "getBlindStatus",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "vj19me",
+            "cache_key_parameters": [],
+            "cache_namespace": "4run97",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "GET",
-            "id": "agi-xtfc6kv4ij-vj19me-GET",
+            "id": "agi-5y6ik2qvoj-4run97-GET",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "vj19me",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "4run97",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -350,20 +213,20 @@
           "index_key": "getLightStatus",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "gtq4hk",
+            "cache_key_parameters": [],
+            "cache_namespace": "ixhtrc",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "GET",
-            "id": "agi-xtfc6kv4ij-gtq4hk-GET",
+            "id": "agi-5y6ik2qvoj-ixhtrc-GET",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "gtq4hk",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "ixhtrc",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -389,20 +252,20 @@
           "index_key": "getSunrise",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "rp9ay7",
+            "cache_key_parameters": [],
+            "cache_namespace": "7i4th3",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "GET",
-            "id": "agi-xtfc6kv4ij-rp9ay7-GET",
+            "id": "agi-5y6ik2qvoj-7i4th3-GET",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "rp9ay7",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "7i4th3",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -428,20 +291,20 @@
           "index_key": "getTemperature",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "yinfda",
+            "cache_key_parameters": [],
+            "cache_namespace": "kheqer",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "GET",
-            "id": "agi-xtfc6kv4ij-yinfda-GET",
+            "id": "agi-5y6ik2qvoj-kheqer-GET",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -467,20 +330,20 @@
           "index_key": "setBlindPosition",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "vj19me",
+            "cache_key_parameters": [],
+            "cache_namespace": "4run97",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "POST",
-            "id": "agi-xtfc6kv4ij-vj19me-POST",
+            "id": "agi-5y6ik2qvoj-4run97-POST",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "vj19me",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "4run97",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -506,20 +369,20 @@
           "index_key": "setTemperature",
           "schema_version": 0,
           "attributes": {
-            "cache_key_parameters": null,
-            "cache_namespace": "yinfda",
+            "cache_key_parameters": [],
+            "cache_namespace": "kheqer",
             "connection_id": "",
             "connection_type": "INTERNET",
             "content_handling": "",
             "credentials": "",
             "http_method": "POST",
-            "id": "agi-xtfc6kv4ij-yinfda-POST",
+            "id": "agi-5y6ik2qvoj-kheqer-POST",
             "integration_http_method": "POST",
             "passthrough_behavior": "WHEN_NO_MATCH",
-            "request_parameters": null,
-            "request_templates": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij",
+            "request_parameters": {},
+            "request_templates": {},
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj",
             "timeout_milliseconds": 29000,
             "tls_config": [],
             "type": "AWS_PROXY",
@@ -545,36 +408,40 @@
     },
     {
       "mode": "managed",
-      "type": "aws_api_gateway_integration_response",
-      "name": "app_v1_cors_integration_response",
+      "type": "aws_api_gateway_integration",
+      "name": "cors",
       "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
       "instances": [
         {
           "index_key": "v1/blinds",
           "schema_version": 0,
           "attributes": {
+            "cache_key_parameters": [],
+            "cache_namespace": "4run97",
+            "connection_id": "",
+            "connection_type": "INTERNET",
             "content_handling": "",
+            "credentials": "",
             "http_method": "OPTIONS",
-            "id": "agir-xtfc6kv4ij-vj19me-OPTIONS-200",
-            "resource_id": "vj19me",
-            "response_parameters": {
-              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-              "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE'",
-              "method.response.header.Access-Control-Allow-Origin": "'*'"
+            "id": "agi-5y6ik2qvoj-4run97-OPTIONS",
+            "integration_http_method": "",
+            "passthrough_behavior": "WHEN_NO_MATCH",
+            "request_parameters": {},
+            "request_templates": {
+              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
             },
-            "response_templates": null,
-            "rest_api_id": "xtfc6kv4ij",
-            "selection_pattern": "",
-            "status_code": "200"
+            "resource_id": "4run97",
+            "rest_api_id": "5y6ik2qvoj",
+            "timeout_milliseconds": 29000,
+            "tls_config": [],
+            "type": "MOCK",
+            "uri": ""
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_method_response.app_v1_cors_method_response",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -583,28 +450,32 @@
           "index_key": "v1/lights",
           "schema_version": 0,
           "attributes": {
+            "cache_key_parameters": [],
+            "cache_namespace": "ixhtrc",
+            "connection_id": "",
+            "connection_type": "INTERNET",
             "content_handling": "",
+            "credentials": "",
             "http_method": "OPTIONS",
-            "id": "agir-xtfc6kv4ij-gtq4hk-OPTIONS-200",
-            "resource_id": "gtq4hk",
-            "response_parameters": {
-              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-              "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE'",
-              "method.response.header.Access-Control-Allow-Origin": "'*'"
+            "id": "agi-5y6ik2qvoj-ixhtrc-OPTIONS",
+            "integration_http_method": "",
+            "passthrough_behavior": "WHEN_NO_MATCH",
+            "request_parameters": {},
+            "request_templates": {
+              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
             },
-            "response_templates": null,
-            "rest_api_id": "xtfc6kv4ij",
-            "selection_pattern": "",
-            "status_code": "200"
+            "resource_id": "ixhtrc",
+            "rest_api_id": "5y6ik2qvoj",
+            "timeout_milliseconds": 29000,
+            "tls_config": [],
+            "type": "MOCK",
+            "uri": ""
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_method_response.app_v1_cors_method_response",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -613,28 +484,32 @@
           "index_key": "v1/sunrise",
           "schema_version": 0,
           "attributes": {
+            "cache_key_parameters": [],
+            "cache_namespace": "7i4th3",
+            "connection_id": "",
+            "connection_type": "INTERNET",
             "content_handling": "",
+            "credentials": "",
             "http_method": "OPTIONS",
-            "id": "agir-xtfc6kv4ij-rp9ay7-OPTIONS-200",
-            "resource_id": "rp9ay7",
-            "response_parameters": {
-              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-              "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE'",
-              "method.response.header.Access-Control-Allow-Origin": "'*'"
+            "id": "agi-5y6ik2qvoj-7i4th3-OPTIONS",
+            "integration_http_method": "",
+            "passthrough_behavior": "WHEN_NO_MATCH",
+            "request_parameters": {},
+            "request_templates": {
+              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
             },
-            "response_templates": null,
-            "rest_api_id": "xtfc6kv4ij",
-            "selection_pattern": "",
-            "status_code": "200"
+            "resource_id": "7i4th3",
+            "rest_api_id": "5y6ik2qvoj",
+            "timeout_milliseconds": 29000,
+            "tls_config": [],
+            "type": "MOCK",
+            "uri": ""
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_method_response.app_v1_cors_method_response",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -643,28 +518,32 @@
           "index_key": "v1/temperature",
           "schema_version": 0,
           "attributes": {
+            "cache_key_parameters": [],
+            "cache_namespace": "kheqer",
+            "connection_id": "",
+            "connection_type": "INTERNET",
             "content_handling": "",
+            "credentials": "",
             "http_method": "OPTIONS",
-            "id": "agir-xtfc6kv4ij-yinfda-OPTIONS-200",
-            "resource_id": "yinfda",
-            "response_parameters": {
-              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-              "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE'",
-              "method.response.header.Access-Control-Allow-Origin": "'*'"
+            "id": "agi-5y6ik2qvoj-kheqer-OPTIONS",
+            "integration_http_method": "",
+            "passthrough_behavior": "WHEN_NO_MATCH",
+            "request_parameters": {},
+            "request_templates": {
+              "application/json": "{\r\n  \"statusCode\": 200\r\n}\r\n"
             },
-            "response_templates": null,
-            "rest_api_id": "xtfc6kv4ij",
-            "selection_pattern": "",
-            "status_code": "200"
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj",
+            "timeout_milliseconds": 29000,
+            "tls_config": [],
+            "type": "MOCK",
+            "uri": ""
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
-            "aws_api_gateway_method_response.app_v1_cors_method_response",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -673,115 +552,10 @@
     },
     {
       "mode": "managed",
-      "type": "aws_api_gateway_method",
-      "name": "app_v1_cors_options",
+      "type": "aws_api_gateway_integration_response",
+      "name": "app_v1_cors_integration_response",
       "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
-      "instances": [
-        {
-          "index_key": "v1/blinds",
-          "schema_version": 0,
-          "attributes": {
-            "api_key_required": false,
-            "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
-            "http_method": "OPTIONS",
-            "id": "agm-xtfc6kv4ij-vj19me-OPTIONS",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "vj19me",
-            "rest_api_id": "xtfc6kv4ij"
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        },
-        {
-          "index_key": "v1/lights",
-          "schema_version": 0,
-          "attributes": {
-            "api_key_required": false,
-            "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
-            "http_method": "OPTIONS",
-            "id": "agm-xtfc6kv4ij-gtq4hk-OPTIONS",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "gtq4hk",
-            "rest_api_id": "xtfc6kv4ij"
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        },
-        {
-          "index_key": "v1/sunrise",
-          "schema_version": 0,
-          "attributes": {
-            "api_key_required": false,
-            "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
-            "http_method": "OPTIONS",
-            "id": "agm-xtfc6kv4ij-rp9ay7-OPTIONS",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "rp9ay7",
-            "rest_api_id": "xtfc6kv4ij"
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        },
-        {
-          "index_key": "v1/temperature",
-          "schema_version": 0,
-          "attributes": {
-            "api_key_required": false,
-            "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
-            "http_method": "OPTIONS",
-            "id": "agm-xtfc6kv4ij-yinfda-OPTIONS",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij"
-          },
-          "sensitive_attributes": [],
-          "private": "bnVsbA==",
-          "dependencies": [
-            "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
-            "aws_api_gateway_rest_api.app_v1_rest_api"
-          ],
-          "create_before_destroy": true
-        }
-      ]
+      "instances": []
     },
     {
       "mode": "managed",
@@ -795,16 +569,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "PUT",
-            "id": "agm-xtfc6kv4ij-yinfda-PUT",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-kheqer-PUT",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -821,16 +595,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "GET",
-            "id": "agm-xtfc6kv4ij-vj19me-GET",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "vj19me",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-4run97-GET",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "4run97",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -847,16 +621,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "GET",
-            "id": "agm-xtfc6kv4ij-gtq4hk-GET",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "gtq4hk",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-ixhtrc-GET",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "ixhtrc",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -873,16 +647,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "GET",
-            "id": "agm-xtfc6kv4ij-rp9ay7-GET",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "rp9ay7",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-7i4th3-GET",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "7i4th3",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -899,16 +673,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "GET",
-            "id": "agm-xtfc6kv4ij-yinfda-GET",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-kheqer-GET",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -925,16 +699,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "POST",
-            "id": "agm-xtfc6kv4ij-vj19me-POST",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "vj19me",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-4run97-POST",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "4run97",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -951,16 +725,16 @@
           "attributes": {
             "api_key_required": true,
             "authorization": "NONE",
-            "authorization_scopes": null,
-            "authorizer_id": null,
+            "authorization_scopes": [],
+            "authorizer_id": "",
             "http_method": "POST",
-            "id": "agm-xtfc6kv4ij-yinfda-POST",
-            "operation_name": null,
-            "request_models": null,
-            "request_parameters": null,
-            "request_validator_id": null,
-            "resource_id": "yinfda",
-            "rest_api_id": "xtfc6kv4ij"
+            "id": "agm-5y6ik2qvoj-kheqer-POST",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -975,8 +749,123 @@
     },
     {
       "mode": "managed",
+      "type": "aws_api_gateway_method",
+      "name": "cors",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "index_key": "v1/blinds",
+          "schema_version": 0,
+          "attributes": {
+            "api_key_required": false,
+            "authorization": "NONE",
+            "authorization_scopes": [],
+            "authorizer_id": "",
+            "http_method": "OPTIONS",
+            "id": "agm-5y6ik2qvoj-4run97-OPTIONS",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "4run97",
+            "rest_api_id": "5y6ik2qvoj"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_api_gateway_resource.app_v1_rest_path",
+            "aws_api_gateway_rest_api.app_v1_rest_api"
+          ],
+          "create_before_destroy": true
+        },
+        {
+          "index_key": "v1/lights",
+          "schema_version": 0,
+          "attributes": {
+            "api_key_required": false,
+            "authorization": "NONE",
+            "authorization_scopes": [],
+            "authorizer_id": "",
+            "http_method": "OPTIONS",
+            "id": "agm-5y6ik2qvoj-ixhtrc-OPTIONS",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "ixhtrc",
+            "rest_api_id": "5y6ik2qvoj"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_api_gateway_resource.app_v1_rest_path",
+            "aws_api_gateway_rest_api.app_v1_rest_api"
+          ],
+          "create_before_destroy": true
+        },
+        {
+          "index_key": "v1/sunrise",
+          "schema_version": 0,
+          "attributes": {
+            "api_key_required": false,
+            "authorization": "NONE",
+            "authorization_scopes": [],
+            "authorizer_id": "",
+            "http_method": "OPTIONS",
+            "id": "agm-5y6ik2qvoj-7i4th3-OPTIONS",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "7i4th3",
+            "rest_api_id": "5y6ik2qvoj"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_api_gateway_resource.app_v1_rest_path",
+            "aws_api_gateway_rest_api.app_v1_rest_api"
+          ],
+          "create_before_destroy": true
+        },
+        {
+          "index_key": "v1/temperature",
+          "schema_version": 0,
+          "attributes": {
+            "api_key_required": false,
+            "authorization": "NONE",
+            "authorization_scopes": [],
+            "authorizer_id": "",
+            "http_method": "OPTIONS",
+            "id": "agm-5y6ik2qvoj-kheqer-OPTIONS",
+            "operation_name": "",
+            "request_models": {},
+            "request_parameters": {},
+            "request_validator_id": "",
+            "resource_id": "kheqer",
+            "rest_api_id": "5y6ik2qvoj"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_api_gateway_resource.app_v1_rest_path",
+            "aws_api_gateway_rest_api.app_v1_rest_api"
+          ],
+          "create_before_destroy": true
+        }
+      ]
+    },
+    {
+      "mode": "managed",
       "type": "aws_api_gateway_method_response",
       "name": "app_v1_cors_method_response",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_api_gateway_method_response",
+      "name": "cors",
       "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
       "instances": [
         {
@@ -984,8 +873,8 @@
           "schema_version": 0,
           "attributes": {
             "http_method": "OPTIONS",
-            "id": "agmr-xtfc6kv4ij-vj19me-OPTIONS-200",
-            "resource_id": "vj19me",
+            "id": "agmr-5y6ik2qvoj-4run97-OPTIONS-200",
+            "resource_id": "4run97",
             "response_models": {
               "application/json": "Empty"
             },
@@ -994,16 +883,14 @@
               "method.response.header.Access-Control-Allow-Methods": true,
               "method.response.header.Access-Control-Allow-Origin": true
             },
-            "rest_api_id": "xtfc6kv4ij",
+            "rest_api_id": "5y6ik2qvoj",
             "status_code": "200"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -1013,8 +900,8 @@
           "schema_version": 0,
           "attributes": {
             "http_method": "OPTIONS",
-            "id": "agmr-xtfc6kv4ij-gtq4hk-OPTIONS-200",
-            "resource_id": "gtq4hk",
+            "id": "agmr-5y6ik2qvoj-ixhtrc-OPTIONS-200",
+            "resource_id": "ixhtrc",
             "response_models": {
               "application/json": "Empty"
             },
@@ -1023,16 +910,14 @@
               "method.response.header.Access-Control-Allow-Methods": true,
               "method.response.header.Access-Control-Allow-Origin": true
             },
-            "rest_api_id": "xtfc6kv4ij",
+            "rest_api_id": "5y6ik2qvoj",
             "status_code": "200"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -1042,8 +927,8 @@
           "schema_version": 0,
           "attributes": {
             "http_method": "OPTIONS",
-            "id": "agmr-xtfc6kv4ij-rp9ay7-OPTIONS-200",
-            "resource_id": "rp9ay7",
+            "id": "agmr-5y6ik2qvoj-7i4th3-OPTIONS-200",
+            "resource_id": "7i4th3",
             "response_models": {
               "application/json": "Empty"
             },
@@ -1052,16 +937,14 @@
               "method.response.header.Access-Control-Allow-Methods": true,
               "method.response.header.Access-Control-Allow-Origin": true
             },
-            "rest_api_id": "xtfc6kv4ij",
+            "rest_api_id": "5y6ik2qvoj",
             "status_code": "200"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -1071,8 +954,8 @@
           "schema_version": 0,
           "attributes": {
             "http_method": "OPTIONS",
-            "id": "agmr-xtfc6kv4ij-yinfda-OPTIONS-200",
-            "resource_id": "yinfda",
+            "id": "agmr-5y6ik2qvoj-kheqer-OPTIONS-200",
+            "resource_id": "kheqer",
             "response_models": {
               "application/json": "Empty"
             },
@@ -1081,16 +964,14 @@
               "method.response.header.Access-Control-Allow-Methods": true,
               "method.response.header.Access-Control-Allow-Origin": true
             },
-            "rest_api_id": "xtfc6kv4ij",
+            "rest_api_id": "5y6ik2qvoj",
             "status_code": "200"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_api_gateway_integration.app_v1_cors_options_integration",
-            "aws_api_gateway_method.app_v1_cors_options",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
-            "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api"
           ],
           "create_before_destroy": true
@@ -1107,11 +988,11 @@
           "index_key": "v1/blinds",
           "schema_version": 0,
           "attributes": {
-            "id": "vj19me",
-            "parent_id": "5pcw49",
+            "id": "4run97",
+            "parent_id": "lfd8w6",
             "path": "/v1/blinds",
             "path_part": "blinds",
-            "rest_api_id": "xtfc6kv4ij"
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1125,11 +1006,11 @@
           "index_key": "v1/lights",
           "schema_version": 0,
           "attributes": {
-            "id": "gtq4hk",
-            "parent_id": "5pcw49",
+            "id": "ixhtrc",
+            "parent_id": "lfd8w6",
             "path": "/v1/lights",
             "path_part": "lights",
-            "rest_api_id": "xtfc6kv4ij"
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1143,11 +1024,11 @@
           "index_key": "v1/sunrise",
           "schema_version": 0,
           "attributes": {
-            "id": "rp9ay7",
-            "parent_id": "5pcw49",
+            "id": "7i4th3",
+            "parent_id": "lfd8w6",
             "path": "/v1/sunrise",
             "path_part": "sunrise",
-            "rest_api_id": "xtfc6kv4ij"
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1161,11 +1042,11 @@
           "index_key": "v1/temperature",
           "schema_version": 0,
           "attributes": {
-            "id": "yinfda",
-            "parent_id": "5pcw49",
+            "id": "kheqer",
+            "parent_id": "lfd8w6",
             "path": "/v1/temperature",
             "path_part": "temperature",
-            "rest_api_id": "xtfc6kv4ij"
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1187,11 +1068,11 @@
           "index_key": "v1",
           "schema_version": 0,
           "attributes": {
-            "id": "5pcw49",
-            "parent_id": "9906bi7au5",
+            "id": "lfd8w6",
+            "parent_id": "d87kq578eb",
             "path": "/v1",
             "path_part": "v1",
-            "rest_api_id": "xtfc6kv4ij"
+            "rest_api_id": "5y6ik2qvoj"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1212,10 +1093,10 @@
           "schema_version": 0,
           "attributes": {
             "api_key_source": "HEADER",
-            "arn": "arn:aws:apigateway:eu-central-1::/restapis/xtfc6kv4ij",
+            "arn": "arn:aws:apigateway:eu-central-1::/restapis/5y6ik2qvoj",
             "binary_media_types": [],
             "body": null,
-            "created_date": "2025-06-07T11:20:41Z",
+            "created_date": "2025-06-04T12:23:07Z",
             "description": "",
             "disable_execute_api_endpoint": false,
             "endpoint_configuration": [
@@ -1226,16 +1107,16 @@
                 "vpc_endpoint_ids": []
               }
             ],
-            "execution_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij",
+            "execution_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj",
             "fail_on_warnings": null,
-            "id": "xtfc6kv4ij",
+            "id": "5y6ik2qvoj",
             "minimum_compression_size": "",
             "name": "app-v1-rest-api",
             "parameters": null,
             "policy": "",
             "put_rest_api_mode": null,
-            "root_resource_id": "9906bi7au5",
-            "tags": null,
+            "root_resource_id": "d87kq578eb",
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1254,22 +1135,22 @@
           "schema_version": 0,
           "attributes": {
             "access_log_settings": [],
-            "arn": "arn:aws:apigateway:eu-central-1::/restapis/xtfc6kv4ij/stages/prod",
+            "arn": "arn:aws:apigateway:eu-central-1::/restapis/5y6ik2qvoj/stages/prod",
             "cache_cluster_enabled": false,
             "cache_cluster_size": "",
             "canary_settings": [],
             "client_certificate_id": "",
-            "deployment_id": "lra1f8",
+            "deployment_id": "543fvm",
             "description": "",
             "documentation_version": "",
-            "execution_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/prod",
-            "id": "ags-xtfc6kv4ij-prod",
-            "invoke_url": "https://xtfc6kv4ij.execute-api.eu-central-1.amazonaws.com/prod",
-            "rest_api_id": "xtfc6kv4ij",
+            "execution_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/prod",
+            "id": "ags-5y6ik2qvoj-prod",
+            "invoke_url": "https://5y6ik2qvoj.execute-api.eu-central-1.amazonaws.com/prod",
+            "rest_api_id": "5y6ik2qvoj",
             "stage_name": "prod",
-            "tags": null,
+            "tags": {},
             "tags_all": {},
-            "variables": null,
+            "variables": {},
             "web_acl_arn": "",
             "xray_tracing_enabled": false
           },
@@ -1279,10 +1160,14 @@
             "aws_api_gateway_deployment.app_v1_app_deployment",
             "aws_api_gateway_integration.app_v1_cors_options_integration",
             "aws_api_gateway_integration.app_v1_lambda_integration",
+            "aws_api_gateway_integration.cors",
             "aws_api_gateway_integration_response.app_v1_cors_integration_response",
+            "aws_api_gateway_integration_response.cors",
             "aws_api_gateway_method.app_v1_cors_options",
             "aws_api_gateway_method.app_v1_lambda_method",
+            "aws_api_gateway_method.cors",
             "aws_api_gateway_method_response.app_v1_cors_method_response",
+            "aws_api_gateway_method_response.cors",
             "aws_api_gateway_resource.app_v1_rest_path",
             "aws_api_gateway_resource.app_v1_rest_version",
             "aws_api_gateway_rest_api.app_v1_rest_api",
@@ -1307,18 +1192,18 @@
           "attributes": {
             "api_stages": [
               {
-                "api_id": "xtfc6kv4ij",
+                "api_id": "5y6ik2qvoj",
                 "stage": "prod",
                 "throttle": []
               }
             ],
-            "arn": "arn:aws:apigateway:eu-central-1::/usageplans/xvdyw9",
+            "arn": "arn:aws:apigateway:eu-central-1::/usageplans/hdo4kv",
             "description": "",
-            "id": "xvdyw9",
+            "id": "hdo4kv",
             "name": "app_usage_plan",
             "product_code": "",
             "quota_settings": [],
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "throttle_settings": [
               {
@@ -1360,12 +1245,12 @@
         {
           "schema_version": 0,
           "attributes": {
-            "id": "resxip9up6",
-            "key_id": "resxip9up6",
+            "id": "54sid7kyml",
+            "key_id": "54sid7kyml",
             "key_type": "API_KEY",
             "name": "app_api_key",
-            "usage_plan_id": "xvdyw9",
-            "value": "l4i1Zy9oOw6Py0JvwsBEp7jWGQmGtHuX4cGyz9Ck"
+            "usage_plan_id": "hdo4kv",
+            "value": "ZgZOvRmW2P3wUWUFmcgHG5y1Ue6LUIoo4YEZIXC9"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1411,7 +1296,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1437,7 +1322,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1463,7 +1348,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1489,7 +1374,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1515,7 +1400,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1541,7 +1426,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1567,7 +1452,7 @@
             "name_prefix": "",
             "retention_in_days": 7,
             "skip_destroy": false,
-            "tags": null,
+            "tags": {},
             "tags_all": {}
           },
           "sensitive_attributes": [],
@@ -1623,12 +1508,12 @@
             "restore_source_name": null,
             "restore_to_latest_time": null,
             "server_side_encryption": [],
-            "stream_arn": "arn:aws:dynamodb:eu-central-1:428652792036:table/app-v1-temperature/stream/2025-06-07T11:20:41.431",
+            "stream_arn": "arn:aws:dynamodb:eu-central-1:428652792036:table/app-v1-temperature/stream/2025-06-04T12:23:07.285",
             "stream_enabled": true,
-            "stream_label": "2025-06-07T11:20:41.431",
+            "stream_label": "2025-06-04T12:23:07.285",
             "stream_view_type": "NEW_IMAGE",
             "table_class": "STANDARD",
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeouts": null,
             "ttl": [
@@ -1656,20 +1541,25 @@
           "attributes": {
             "arn": "arn:aws:iam::428652792036:role/app-v1-lambda-role",
             "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
-            "create_date": "2025-06-07T11:20:41Z",
+            "create_date": "2025-06-04T12:23:07Z",
             "description": "",
             "force_detach_policies": false,
             "id": "app-v1-lambda-role",
             "inline_policy": [],
-            "managed_policy_arns": [],
+            "managed_policy_arns": [
+              "arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB",
+              "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+              "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+              "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+            ],
             "max_session_duration": 3600,
             "name": "app-v1-lambda-role",
             "name_prefix": "",
             "path": "/",
             "permissions_boundary": "",
-            "tags": null,
+            "tags": {},
             "tags_all": {},
-            "unique_id": "AROAWHTNSRDSHH6QZD2RO"
+            "unique_id": "AROAWHTNSRDSJVMH4SLXB"
           },
           "sensitive_attributes": [],
           "private": "bnVsbA==",
@@ -1686,7 +1576,7 @@
         {
           "schema_version": 0,
           "attributes": {
-            "id": "app-v1-lambda-role-20250607112040601900000001",
+            "id": "app-v1-lambda-role-20250604122308281100000003",
             "policy_arn": "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
             "role": "app-v1-lambda-role"
           },
@@ -1707,7 +1597,7 @@
         {
           "schema_version": 0,
           "attributes": {
-            "id": "app-v1-lambda-role-20250607112040912800000003",
+            "id": "app-v1-lambda-role-20250604122308132900000002",
             "policy_arn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
             "role": "app-v1-lambda-role"
           },
@@ -1728,7 +1618,7 @@
         {
           "schema_version": 0,
           "attributes": {
-            "id": "app-v1-lambda-role-20250607112040965000000004",
+            "id": "app-v1-lambda-role-20250604122307957500000001",
             "policy_arn": "arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB",
             "role": "app-v1-lambda-role"
           },
@@ -1749,7 +1639,7 @@
         {
           "schema_version": 0,
           "attributes": {
-            "id": "app-v1-lambda-role-20250607112040781900000002",
+            "id": "app-v1-lambda-role-20250604122308296100000004",
             "policy_arn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
             "role": "app-v1-lambda-role"
           },
@@ -1800,8 +1690,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-fix-temperature/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.640+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -1829,7 +1719,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -1885,8 +1775,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-get-blind-status/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.616+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -1914,7 +1804,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -1970,8 +1860,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-get-light-status/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.616+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -1999,7 +1889,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -2055,8 +1945,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-get-sunrise/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.574+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -2084,7 +1974,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -2140,8 +2030,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-get-temperature/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.582+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -2169,7 +2059,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -2225,8 +2115,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-set-blind-position/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.608+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -2254,7 +2144,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -2310,8 +2200,8 @@
             "image_uri": "",
             "invoke_arn": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:428652792036:function:app-v1-set-temperature/invocations",
             "kms_key_arn": "",
-            "last_modified": "2025-06-07T11:20:48.630+0000",
-            "layers": null,
+            "last_modified": "2025-06-07T10:37:00.000+0000",
+            "layers": [],
             "logging_config": [
               {
                 "application_log_level": "",
@@ -2339,7 +2229,7 @@
             "snap_start": [],
             "source_code_hash": "Y1QtAooxrkHMm+V9dPnPZ05QzxWnaODclg0wjxlHfDk=",
             "source_code_size": 1619457,
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeout": 25,
             "timeouts": null,
@@ -2383,7 +2273,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-fixTemperature",
             "statement_id_prefix": ""
           },
@@ -2412,7 +2302,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-getBlindStatus",
             "statement_id_prefix": ""
           },
@@ -2441,7 +2331,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-getLightStatus",
             "statement_id_prefix": ""
           },
@@ -2470,7 +2360,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-getSunrise",
             "statement_id_prefix": ""
           },
@@ -2499,7 +2389,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-getTemperature",
             "statement_id_prefix": ""
           },
@@ -2528,7 +2418,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-setBlindPosition",
             "statement_id_prefix": ""
           },
@@ -2557,7 +2447,7 @@
             "principal_org_id": null,
             "qualifier": "",
             "source_account": null,
-            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:xtfc6kv4ij/*/*",
+            "source_arn": "arn:aws:execute-api:eu-central-1:428652792036:5y6ik2qvoj/*/*",
             "statement_id": "AllowExecutionFromAPIGateway-setTemperature",
             "statement_id_prefix": ""
           },
@@ -2628,7 +2518,7 @@
                 ]
               }
             ],
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "timeouts": null,
             "versioning": [
@@ -2700,7 +2590,7 @@
             "id": "app.zip",
             "key": "app.zip",
             "kms_key_id": null,
-            "metadata": null,
+            "metadata": {},
             "object_lock_legal_hold_status": "",
             "object_lock_mode": "",
             "object_lock_retain_until_date": "",
@@ -2709,7 +2599,7 @@
             "source": ".././terraform/files/app.zip",
             "source_hash": null,
             "storage_class": "STANDARD",
-            "tags": null,
+            "tags": {},
             "tags_all": {},
             "version_id": "",
             "website_redirect": ""

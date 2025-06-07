@@ -5,7 +5,7 @@ variable "versions" {
 
 variable "paths" {
   type    = list(string)
-  default = ["temperature", "blinds", "sunrise"]
+  default = ["temperature", "blinds", "sunrise", "lights"]
 }
 
 variable "lambdas" {
@@ -57,6 +57,13 @@ variable "lambdas" {
       "handler" : "sunrise.get_sunrise",
       "version" : "v1",
       "apiPath" : "sunrise",
+      "apiMethod" : "GET"
+    },
+    "getLightStatus" = {
+      "name" : "app-v1-get-light-status",
+      "handler" : "lights.get_light_state",
+      "version" : "v1",
+      "apiPath" : "lights",
       "apiMethod" : "GET"
     }
   }

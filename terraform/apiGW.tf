@@ -211,4 +211,4 @@ resource "aws_api_gateway_stage" "app_v1_stage" {
   stage_name    = "prod"
   rest_api_id   = aws_api_gateway_rest_api.app_v1_rest_api.id
   deployment_id = aws_api_gateway_deployment.app_v1_app_deployment.id
-}
+} 

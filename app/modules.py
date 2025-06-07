@@ -274,3 +274,25 @@ def get_blind_list():
     # print(blinds)
 
     return blinds
+
+# Get light devices list
+def get_light_list():
+    # You will need a light_list.json file with the list of blinds and these attributes:
+    # {
+    #     "lights": [
+    #         {
+    #             "name": "comdedor",
+    #             "type": "shelly",
+    #             "id": "5432045e3fb8"
+    #         }
+    #     ]
+    # }
+
+    # Get light list
+    filename = "light_list.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    lights = data.get("lights")
+    # print(lights)
+
+    return lights

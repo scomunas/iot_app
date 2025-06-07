@@ -4,7 +4,7 @@
 ######################################
 
 from modules import (
-    get_blind_list,
+    get_light_list,
     get_shelly_token,
     get_shelly_device_state,
     set_shelly_roller_position,
@@ -14,41 +14,40 @@ from modules import (
 )
 import json
 
-## Get all blind state
+## Get all light state
 ## only for shelly
-## aqara always return 0 
-def get_blind_state(event, context):
+def get_light_state(event, context):
     ## Get Event parameters
-    print("Get Blind State -------------------------------------------")
+    print("Get Light State -------------------------------------------")
 
     # Get blind list
-    blinds = get_blind_list()
-    print(blinds)
+    lights = get_light_list()
+    print(lights)
 
     # Get status from each blind
     response_description = []
     status = 400
-    for blind in blinds:
+    for light in lights:
     ## Check if body has the attributes
-        if (blind['type'] == "aqara"):
+        if (light['type'] == "aqara"):
             print("Persiana Aqara, no tiene status")
             status = 200
             response_description.append(
                 {
-                    "name": blind['name'],
+                    "name": light['name'],
                     "position": -1,
-                    "type": blind['type']
+                    "type": light['type']
                 }
             )
-        elif (blind['type'] == "shelly"):
-            print("Persiana Shelly, obteniendo status")
+        elif (light['type'] == "shelly"):
+            print("Luz Shelly, obteniendo status")
 
             # Get shelly token
             api_key, url = get_shelly_token()
             
             # Get device status
             response = get_shelly_device_state(
-                device_id=blind['id'],
+                device_id=light['id'],
                 api_key=api_key,
                 url_base=url
             )
@@ -57,13 +56,19 @@ def get_blind_state(event, context):
             if (response['isok'] == True and
                 "data" in response.keys()):
                 if(response['data']['online'] == True):
-                    cover_data = response['data']['device_status']['cover:0']
+                    # Check depends on version, if has relays or switch
+                    if ("relays" in response['data']['device_status'].keys()):
+                        light_data = response['data']['device_status']['relays'][0]['ison']
+                    elif ("switch:0" in response['data']['device_status'].keys()):
+                        light_data = response['data']['device_status']['switch:0']['output']
+                    else:
+                        light_data = 'error'
                     status = 200
                     response_description.append(
                         {
-                            "name": blind['name'],
-                            "position": cover_data['current_pos'],
-                            "type": blind['type']
+                            "name": light['name'],
+                            "status": light_data,
+                            "type": light['type']
                         }
                     )
             else:
@@ -71,9 +76,9 @@ def get_blind_state(event, context):
                 status = 400
                 response_description.append(
                     {
-                        "name": blind['name'],
+                        "name": light['name'],
                         "position": 0,
-                        "type": blind['type']
+                        "type": light['type']
                     }
                 )
         else:
@@ -97,12 +102,10 @@ def get_blind_state(event, context):
     }
 
 
-## Set blind position or action
-## position or action for shelly
-## aqara only action
-def set_blind_position(event, context):
+## Set light action
+def set_light_action(event, context):
     ## Get Event parameters
-    print("Set Blind Position -------------------------------------------")
+    print("Set Light Action -------------------------------------------")
     # print(event)
     body = json.loads(event["body"])
     print(body)

@@ -1,0 +1,44 @@
+{
+    "lights": [
+        {
+            "name": "comedor_sofa",
+            "type": "shelly",
+            "id": "34945474b8b1"
+        },
+        {
+            "name": "comedor_mesa",
+            "type": "shelly",
+            "id": "34945474b875"
+        },
+        {
+            "name": "laura",
+            "type": "shelly",
+            "id": "80646fd9d450"
+        },
+        {
+            "name": "nico",
+            "type": "shelly",
+            "id": "a0a3b3c3569c"
+        },
+        {
+            "name": "papas",
+            "type": "shelly",
+            "id": "80646fc8279c"
+        },
+        {
+            "name": "estudio_marta",
+            "type": "shelly",
+            "id": "80646fdcef44"
+        },
+        {
+            "name": "estudio_sergio",
+            "type": "shelly",
+            "id": "80646fc7e44c"
+        },
+        {
+            "name": "invitados",
+            "type": "shelly",
+            "id": "3494547b7a8b"
+        }
+    ]
+}
