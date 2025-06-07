@@ -1,0 +1,9 @@
+{
+    "sensors": [
+        {
+            "name": "sunrise",
+            "type": "shelly",
+            "id": "5432045e3fb8"
+        }
+    ]
+}

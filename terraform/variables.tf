@@ -5,7 +5,7 @@ variable "versions" {
 
 variable "paths" {
   type    = list(string)
-  default = ["temperature", "blinds"]
+  default = ["temperature", "blinds", "sunrise"]
 }
 
 variable "lambdas" {
@@ -51,6 +51,13 @@ variable "lambdas" {
       "version" : "v1",
       "apiPath" : "blinds",
       "apiMethod" : "POST"
+    },
+    "getSunrise" = {
+      "name" : "app-v1-get-sunrise",
+      "handler" : "sunrise.get_sunrise",
+      "version" : "v1",
+      "apiPath" : "sunrise",
+      "apiMethod" : "GET"
     }
   }
 }

@@ -39,32 +39,6 @@ def insert_db(table_name, event_parameters, ttl_days):
     # Return status value
     return status_code, response['ResponseMetadata']
 
-# Check if some registers exists in table
-def check_db(table_name, type, date, id, state):
-    dynamodb = boto3.client('dynamodb')
-
-    response = dynamodb.query(
-        TableName=table_name,
-        KeyConditionExpression='event_type = :event_type AND event_date >= :event_date',
-        ExpressionAttributeValues={
-            ':event_type': {'S': type},
-            ':event_date': {'S': date}
-        },
-        ScanIndexForward=False
-    )
-    # print(response)
-    
-    event_number = 0
-    
-    for item in response['Items']:
-        event_id = item['event_id']['S']
-        event_state = item['event_state']['S']
-        if ((event_id == id or id == 'any') and
-            (event_state == state or state == 'any')):
-            event_number += 1
-
-    return event_number, response['Items']
-
 # Get results from table
 def get_db(table_name):
     dynamodb = boto3.resource('dynamodb')
@@ -85,93 +59,6 @@ def get_db(table_name):
 
     return items
 
-# Get sunrise/sunset from https://sunrisesunset.io/api/
-def get_sunrise(lat, long):
-    url = "https://api.sunrisesunset.io/json?lat=" + \
-        str(lat) + \
-        "&lng=" + \
-        str(long)
-
-    payload={}
-    headers = {}
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    if response.status_code >= 200 and response.status_code < 300:
-        response_json = json.loads(response.text)
-        sunrise = datetime.strptime(response_json['results']['sunrise'], "%I:%M:%S %p")
-        sunset = datetime.strptime(response_json['results']['sunset'], "%I:%M:%S %p")
-        data = {
-            "status": 200,
-            "results": {
-                "sunrise": sunrise,
-                "sunset": sunset    
-            }
-        }
-    else:
-        data = {
-            "status": 400,
-            "results": {
-            }
-        }
-    
-    return data
-
-# Get holiday list from https://date.nager.at/api
-def get_holidays(country, county):
-    year = datetime.now().year
-    url = "https://date.nager.at/api/v3/publicholidays/" + \
-        str(year) + \
-        "/" + \
-        str(country)
-
-    payload={}
-    headers = {}
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-    if response.status_code >= 200 and response.status_code < 300:
-        response_json = json.loads(response.text)
-        holiday_list = []
-        for holiday in response_json:
-            if (holiday['global'] == True or
-                county in holiday['counties']):
-                holiday_list.append(holiday['date'])
-        data = {
-            "status": 200,
-            "results": holiday_list  
-        }
-    else:
-        data = {
-            "status": 400,
-            "results": {
-            }
-        }
-    
-    return data
-    
-# Store config file
-def put_config_file(data):
-    bucket = os.environ['S3_BUCKET']
-    s3 = boto3.resource('s3')
-    s3object = s3.Object(bucket, 'config.json')
-    response = s3object.put(
-        Body=(bytes(json.dumps(data).encode('UTF-8')))
-    )
-    status_code = response['ResponseMetadata']['HTTPStatusCode']
-
-    # Return status value
-    return status_code, response['ResponseMetadata']
-
-# Retrieve config file
-def get_config_file():
-    bucket = os.environ['S3_BUCKET']
-    s3 = boto3.resource('s3')
-    s3object = s3.Object(bucket, 'config.json')
-    file_content = s3object.get()['Body'].read().decode('utf-8')
-    json_content = json.loads(file_content)
-    return json_content
-
 # Use a IFTTT app
 def ifttt_app(key, app_name, body):
     url = "https://maker.ifttt.com/trigger/APPLET_NAME/json/with/key/".replace("APPLET_NAME", app_name) + key
@@ -186,76 +73,204 @@ def ifttt_app(key, app_name, body):
 
     return response.status_code
 
-# Create event in eventbridge scheduler
-def event_create(name, event, target_lambda, schedule, event_group):
-    scheduler = boto3.client('scheduler')
+# Get Netatmo token
+def get_netatmo_token():
+    # Not inserted in Secrets Manager for budget reasons
+    # You will need a netatmo_token.json file in the root with these attributes:
+    # {
+    #     "CLIENT_ID": "xxxxxxxx",
+    #     "CLIENT_SECRET": "xxxxxxxxxxxxx",
+    #     "REFRESH_TOKEN": "xxxxxxxxxxxxxxxxx"
+    # }
 
-    flex_window = { "Mode": "OFF" }
+    # Get token data
+    filename = "netatmo_token.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    CLIENT_ID = data.get("CLIENT_ID")
+    CLIENT_SECRET = data.get("CLIENT_SECRET")
+    REFRESH_TOKEN = data.get("REFRESH_TOKEN")
 
-    eventbridge_target = {
-        "RoleArn": os.environ['EVENTBRIDGE_ROLE'],
-        "Arn": target_lambda,
-        "Input": json.dumps(event),
-        'RetryPolicy': {
-                'MaximumEventAgeInSeconds': 3600,
-                'MaximumRetryAttempts': 0
-            },
+    # Get new acces_token
+    print("Getting token from Netatmo")
+    url = 'https://api.netatmo.com/oauth2/token'
+    data = {
+        'grant_type': 'refresh_token',
+        'refresh_token': REFRESH_TOKEN,
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET
     }
+    response = requests.post(url, data=data)
+    response.raise_for_status()
+    token_info = response.json()
+    access_token = token_info['access_token']
+    new_refresh_token = token_info['refresh_token']
 
-    scheduler.create_schedule(
-        Name = name,
-        ActionAfterCompletion='DELETE',
-        ScheduleExpression = 'at(' + schedule + ')',
-        ScheduleExpressionTimezone = 'CET',
-        State='ENABLED',
-        GroupName=event_group,
-        Target=eventbridge_target,
-        FlexibleTimeWindow=flex_window)
+    return access_token
 
-# Check schedule for concrete events
-def event_check(group, rule):
-    scheduler = boto3.client('scheduler')
+# Get netatmo data from all sensors
+def get_netatmo_data(access_token):
+   # Get data from all the sensors
+    url = 'https://api.netatmo.com/api/getstationsdata'
+    headers = {'Authorization': f'Bearer {access_token}'}
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    data = response.json()
 
-    response = scheduler.list_schedules(
-        GroupName=group,
-        NamePrefix=rule,
-        MaxResults=50
+    stations = data['body']['devices']
+    module_data = []
+    for station in stations:
+        station_name = station['station_name']
+        if 'dashboard_data' in station:
+            temperature = station['dashboard_data'].get('Temperature')
+            if temperature is not None:
+                module_data.append({
+                    "sensor": station_name,
+                    "temperature": str(temperature)
+                })
+        for module in station.get('modules', []):
+            module_name = module.get('module_name')
+            temperature = module.get('dashboard_data', {}).get('Temperature')
+            if temperature is not None:
+                module_data.append({
+                    "sensor": module_name,
+                    "temperature": str(temperature)
+                })
+        
+    return module_data
+
+# Get token for use with Shelly API
+def get_shelly_token():
+    # You will need a shelly_token.json file in the root with these attributes:
+    # {
+    #     "api-key": "xxxxxxxx",
+    #     "url": "xxxxxxxx",     
+    # }
+
+    # Get shelly token
+    filename = "shelly_token.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    url_base = data.get("url")
+    api_key = data.get("api_key")
+
+    return api_key, url_base
+
+# Get state from one Shelly device
+def get_shelly_device_state(device_id, url_base, api_key):
+    url = url_base + "/device/status"
+    payload = 'auth_key=' + api_key + '&id=' + device_id
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response_json = response.json()
+    # print(response_json)
+    
+    return response_json
+
+# Set position for a Shelly roller
+def set_shelly_roller_position(device_id, url_base, api_key, position):
+    url = url_base + "/device/relay/roller/settings/topos"
+    # print(url)
+    payload = 'auth_key=' + api_key + '&id=' + device_id + '&pos=' + position
+    # print(payload)
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response_json = response.json()
+    
+    return response_json
+
+#Set action (open/close/stop) for a Shelly roller
+def set_shelly_roller_action(device_id, url_base, api_key, action):
+    url = url_base + "/device/relay/roller/control"
+    # print(url)
+    payload = 'auth_key=' + api_key + '&id=' + device_id + '&direction=' + action
+    # print(payload)
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response_json = response.json()
+    
+    return response_json
+
+# Get token for use with Aqara API (for the moment with IFTTT)
+def get_aqara_token():
+    # You will need a ifttt_token.json file in the root with these attributes:
+    # {
+    #     "api-key": "xxxxxxxx"
+    # }
+
+    # Get ifttt token
+    filename = "ifttt_token.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    api_key = data.get("api_key")
+
+    return api_key
+
+# Set action (open/close/stop) for an aqara roller
+# Uses ifttt_app function
+def set_aqara_roller_action(device_id, api_key, action):
+    body = {
+            "blind": device_id,
+            "action": action
+        }
+    # print(body)
+    ifttt_app(
+        key = api_key,
+        app_name = "iot_v8_blinds",
+        body = body
     )
 
-    if (response['ResponseMetadata']['HTTPStatusCode'] == 200 and
-        len(response['Schedules']) > 0):
-        rule_found = True
-    else:
-        rule_found = False
+    return "ok"
 
-    return rule_found
+# Get sensor devices list
+def get_sensor_list():
+    # You will need a sensor_list.json file with the list of sensors and these attributes:
+    # {
+    #     "sensors": [
+    #         {
+    #             "name": "sunrise",
+    #             "type": "shelly",
+    #             "id": "5432045e3fb8"
+    #         }
+    #     ]
+    # }
 
-# Delete events for a group and name_prefix
-def event_delete(group, name_prefix):
-    scheduler = boto3.client('scheduler')
+    # Get sensor list
+    filename = "sensor_list.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    sensors = data.get("sensors")
+    # print(sensors)
 
-    response = scheduler.list_schedules(
-        GroupName=group,
-        NamePrefix=name_prefix,
-        MaxResults=50
-    )
+    return sensors
 
-    if (response['ResponseMetadata']['HTTPStatusCode'] == 200 and
-        len(response['Schedules']) > 0):
-        rule_found = True
-    else:
-        rule_found = False
+# Get blind devices list
+def get_blind_list():
+    # You will need a blind_list.json file with the list of blinds and these attributes:
+    # {
+    #     "blinds": [
+    #         {
+    #             "name": "sunrise",
+    #             "type": "shelly",
+    #             "id": "5432045e3fb8"
+    #         }
+    #     ]
+    # }
 
-    rule_deleted = True
-    for schedule in response['Schedules']:
-        scheduler.delete_schedule(
-            GroupName=group,
-            Name=schedule['Name']
-        )
+    # Get blind list
+    filename = "blind_list.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    blinds = data.get("blinds")
+    # print(blinds)
 
-        if (response['ResponseMetadata']['HTTPStatusCode'] == 200):
-            rule_deleted = rule_deleted & True
-        else:
-            rule_deleted = False
-
-    return rule_found & rule_deleted
+    return blinds
