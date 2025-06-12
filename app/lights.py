@@ -7,20 +7,23 @@ from modules import (
     get_light_list,
     get_shelly_token,
     get_shelly_device_state,
-    set_shelly_roller_position,
-    set_shelly_roller_action,
-    get_aqara_token,
-    set_aqara_roller_action
+    set_shelly_light_action,
+    get_govee_token,
+    get_govee_light_status,
+    set_govee_light_action
 )
 import json
 
 ## Get all light state
 ## only for shelly
 def get_light_state(event, context):
+    # TODO
+    # Añadir luces de otros fabricantes
+
     ## Get Event parameters
     print("Get Light State -------------------------------------------")
 
-    # Get blind list
+    # Get lights list
     lights = get_light_list()
     print(lights)
 
@@ -29,16 +32,55 @@ def get_light_state(event, context):
     status = 400
     for light in lights:
     ## Check if body has the attributes
-        if (light['type'] == "aqara"):
-            print("Persiana Aqara, no tiene status")
-            status = 200
-            response_description.append(
-                {
-                    "name": light['name'],
-                    "position": -1,
-                    "type": light['type']
-                }
+        if (light['type'] == "govee"):
+            print("Luz Govee, obteniendo statusatus")
+
+            # Get govee token
+            api_key, url = get_govee_token()
+            
+            # Get device status
+            response = get_govee_light_status(
+                device_id=light['id'],
+                api_key=api_key,
+                url_base=url
             )
+
+            # Check Govee response
+            if (response['code'] == 200 and
+                "payload" in response.keys()):
+                # Look for capabilities
+                govee_online = False
+                govee_on_off = 0
+                for capability in response['payload']['capabilities']:
+                    if (capability['instance'] == 'online'):
+                        govee_online = capability['state']['value']
+                    if (capability['instance'] == 'powerSwitch'):
+                        govee_on_off = capability['state']['value']
+                if(govee_online == True):
+                    if(govee_on_off == 1):
+                        light_data = True
+                    else:
+                        light_data = False
+                status = 200
+                response_description.append(
+                    {
+                        "name": light['name'],
+                        "status": light_data,
+                        "type": light['type'],
+                        "online": govee_online
+                    }
+                )
+            else:
+                print("Govee response KO")
+                status = 400
+                response_description.append(
+                    {
+                        "name": light['name'],
+                        "status": False,
+                        "type": light['type'],
+                        "online": False
+                    }
+                )
         elif (light['type'] == "shelly"):
             print("Luz Shelly, obteniendo status")
 
@@ -55,7 +97,8 @@ def get_light_state(event, context):
             # Check Shelly response
             if (response['isok'] == True and
                 "data" in response.keys()):
-                if(response['data']['online'] == True):
+                shelly_online = response['data']['online'] 
+                if(shelly_online== True):
                     # Check depends on version, if has relays or switch
                     if ("relays" in response['data']['device_status'].keys()):
                         light_data = response['data']['device_status']['relays'][0]['ison']
@@ -68,7 +111,18 @@ def get_light_state(event, context):
                         {
                             "name": light['name'],
                             "status": light_data,
-                            "type": light['type']
+                            "type": light['type'],
+                            "online": shelly_online
+                        }
+                    )
+                else:
+                    status = 200
+                    response_description.append(
+                        {
+                            "name": light['name'],
+                            "status": False,
+                            "type": light['type'],
+                            "online": shelly_online
                         }
                     )
             else:
@@ -77,8 +131,9 @@ def get_light_state(event, context):
                 response_description.append(
                     {
                         "name": light['name'],
-                        "position": 0,
-                        "type": light['type']
+                        "status": False,
+                        "type": light['type'],
+                        "online": False
                     }
                 )
         else:
@@ -111,92 +166,58 @@ def set_light_action(event, context):
     print(body)
 
    ## Check if body has the attributes
-    if ("blind" in body.keys()):
-        if ("position" in body.keys()):
-            print("Blind movement demanded by position")
+    if ("light" in body.keys()):
+        if ("action" in body.keys()):
+            print("Light action demanded")
             print("Body check OK")
 
-            # Get blind list
-            blinds = get_blind_list()
+            # Get lights list
+            lights = get_light_list()
+            print(lights)
 
-            # Get blind ID if there is in the list
-            blind_id = 'none'
-            for blind in blinds:
-                if (blind['name'] == body['blind']):
-                    blind_id = blind['id']
-                    blind_type = blind['type']
+            # Get light ID if there is in the list
+            light_id = 'none'
+            for light in lights:
+                if (light['name'] == body['light']):
+                    light_id = light['id']
+                    light_type = light['type']
 
-            if (blind_type == 'shelly'):
+            if (light_type == 'govee'):
+                print("Luz Govee")
+
                 # Get token data
-                api_key, url = get_shelly_token()
+                api_key, url = get_govee_token()
 
-                # Set roller position
-                response = set_shelly_roller_position(
-                    device_id=blind_id,
+                # Set govee action
+                repsons_json = set_govee_light_action(
+                    device_id=light_id,
                     url_base=url,
-                    api_key=api_key,
-                    position=body['position']
-                )
-
-                status = 200
-                response_description = f"Blind {body['blind']} fixed to {body['position']}"
-            elif (blind_type == 'aqara'):
-                print("Aqara blind cannot be moved by position")
-                status = 400
-                response_description = 'Aqara blind cannot be moved by position'
-            else:
-                print("Blind not found")
-                status = 400
-                response_description = 'Blind not found'
-        elif ("action" in body.keys()):
-            print("Blind movement demanded by action")
-            print("Body check OK")
-
-            # Get blind list
-            blinds = get_blind_list()
-
-            # Get blind ID if there is in the list
-            blind_id = 'none'
-            for blind in blinds:
-                if (blind['name'] == body['blind']):
-                    blind_id = blind['id']
-                    blind_type = blind['type']
-
-            if (blind_type == 'aqara'):
-                print("Persiana Aqara")
-
-                # Get aqara token
-                api_key = get_aqara_token()
-
-                # Set aqara action
-                response = set_aqara_roller_action(
-                    device_id=blind_id,
                     api_key=api_key,
                     action=body['action']
                 )
 
                 status = 200
-                response_description = f"Blind {body['blind']} set for {body['action']}"
-            elif (blind_type == 'shelly'):
-                print("Persiana Shelly")
+                response_description = f"Light {body['light']} set for {body['action']}"
+            elif (light_type == 'shelly'):
+                print("Luz Shelly")
 
                 # Get token data
                 api_key, url = get_shelly_token()
 
                 # Set shelly action
-                repsons_json = set_shelly_roller_action(
-                    device_id=blind_id,
+                repsons_json = set_shelly_light_action(
+                    device_id=light_id,
                     url_base=url,
                     api_key=api_key,
                     action=body['action']
                 )
 
                 status = 200
-                response_description = f"Persiana {body['blind']} accionada para {body['action']}"
+                response_description = f"Light {body['light']} set for {body['action']}"
             else:
-                print("Blind not found")
+                print("Light not found")
                 status = 400
-                response_description = 'Blind not found'
+                response_description = 'Light not found'
         else:
             print("Body check KO")
             status = 400

@@ -200,6 +200,21 @@ def set_shelly_roller_action(device_id, url_base, api_key, action):
     
     return response_json
 
+#Set action (on/off) for a Shelly Light
+def set_shelly_light_action(device_id, url_base, api_key, action):
+    url = url_base + "/device/relay/control"
+    # print(url)
+    payload = 'auth_key=' + api_key + '&id=' + device_id + '&turn=' + action + '&channel=0'
+    # print(payload)
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response_json = response.json()
+    
+    return response_json
+
 # Get token for use with Aqara API (for the moment with IFTTT)
 def get_aqara_token():
     # You will need a ifttt_token.json file in the root with these attributes:
@@ -230,6 +245,79 @@ def set_aqara_roller_action(device_id, api_key, action):
     )
 
     return "ok"
+
+# Get token for use with Aqara API (for the moment with IFTTT)
+def get_govee_token():
+    # You will need a govee_token.json file in the root with these attributes:
+    # {
+    #     "api-key": "xxxxxxxx",
+    #     "url": "xxxxxxxx"
+    # }
+
+    # Get ifttt token
+    filename = "govee_token.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    url_base = data.get("url")
+    api_key = data.get("api_key")
+
+    return api_key, url_base
+
+# Get state from one Shelly device
+def get_govee_light_status(device_id, url_base, api_key):
+    url = url_base + "/router/api/v1/device/state"
+    sku, device = device_id.split("|")
+    request_id = sku + datetime.now().strftime("%d%m%Y%H%M%S")
+    payload = json.dumps({
+        "requestId": request_id,
+        "payload": {
+            "sku": sku,
+            "device": device
+        }
+    })
+    headers = {
+        'Govee-API-Key': api_key,
+        'Content-Type': 'application/json' 
+        }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text)
+    response_json = response.json()
+    # print(response_json)
+
+    return response_json
+
+#Set action (on/off) for a Shelly Light
+def set_govee_light_action(device_id, url_base, api_key, action):
+    url = url_base + "/router/api/v1/device/control"
+    sku, device = device_id.split("|")
+    request_id = sku + datetime.now().strftime("%d%m%Y%H%M%S")
+    if (action == "on"):
+        govee_action = 1
+    else:
+        govee_action = 0
+    payload = json.dumps({
+        "requestId": request_id,
+        "payload": {
+            "sku": sku,
+            "device": device,
+            "capability": {
+            "type": "devices.capabilities.on_off",
+            "instance": "powerSwitch",
+            "value": govee_action
+            }
+        }
+    })
+    # print(payload)
+    headers = {
+        'Govee-API-Key': api_key,
+        'Content-Type': 'application/json' 
+        }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    response_json = response.json()
+    
+    return response_json
 
 # Get sensor devices list
 def get_sensor_list():

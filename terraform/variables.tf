@@ -65,6 +65,13 @@ variable "lambdas" {
       "version" : "v1",
       "apiPath" : "lights",
       "apiMethod" : "GET"
+    },
+    "setLightAction" = {
+      "name" : "app-v1-set-light-action",
+      "handler" : "lights.set_light_action",
+      "version" : "v1",
+      "apiPath" : "lights",
+      "apiMethod" : "POST"
     }
   }
 }

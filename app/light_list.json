@@ -39,6 +39,26 @@
             "name": "invitados",
             "type": "shelly",
             "id": "3494547b7a8b"
+        },
+        {
+            "name": "tv",
+            "type": "govee",
+            "id": "H607C|3B:A1:DA:03:EE:6F:15:AC"
+        },
+        {
+            "name": "led_laura",
+            "type": "govee",
+            "id": "H6110|7B:06:60:74:F4:0A:34:5D"
+        },
+        {
+            "name": "led_navidad_1",
+            "type": "govee",
+            "id": "H61A0|C7:B8:D4:AD:FC:72:51:EB"
+        },
+        {
+            "name": "led_navidad_2",
+            "type": "govee",
+            "id": "H61A0|B8:D3:D4:AD:FC:7B:0A:4F"
         }
     ]
 }

@@ -26,6 +26,7 @@ terraform/files/
 /app/netatmo_token.json
 /app/shelly_token.json
 /app/ifttt_token.json
+/app/govee_token.json
 
 # .tfstate files
 # *.tfstate

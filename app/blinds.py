@@ -37,7 +37,8 @@ def get_blind_state(event, context):
                 {
                     "name": blind['name'],
                     "position": -1,
-                    "type": blind['type']
+                    "type": blind['type'],
+                    "online": True
                 }
             )
         elif (blind['type'] == "shelly"):
@@ -63,7 +64,18 @@ def get_blind_state(event, context):
                         {
                             "name": blind['name'],
                             "position": cover_data['current_pos'],
-                            "type": blind['type']
+                            "type": blind['type'],
+                            "online": True
+                        }
+                    )                     
+                else:
+                    status = 200
+                    response_description.append(
+                        {
+                            "name": blind['name'],
+                            "position": -1,
+                            "type": blind['type'],
+                            "online": False
                         }
                     )
             else:
@@ -73,7 +85,8 @@ def get_blind_state(event, context):
                     {
                         "name": blind['name'],
                         "position": 0,
-                        "type": blind['type']
+                        "type": blind['type'],
+                        "online": False
                     }
                 )
         else:
@@ -189,7 +202,7 @@ def set_blind_position(event, context):
                 )
 
                 status = 200
-                response_description = f"Persiana {body['blind']} accionada para {body['action']}"
+                response_description = f"Blind {body['blind']} set for {body['action']}"
             else:
                 print("Blind not found")
                 status = 400
