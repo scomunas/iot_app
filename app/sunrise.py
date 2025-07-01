@@ -9,54 +9,51 @@ from modules import get_shelly_token, get_sensor_list, get_shelly_device_state
 ## from shelly
 def get_sunrise(event, context):
     ## Get Event parameters
-    print("Get Sunrise -------------------------------------------")
+    print("|-0-| Get Sunrise")
 
     # Get Shelly token
     api_key, url = get_shelly_token()
+    print("|-0-| Shelly token obtained")
     
     # Get sensor list
     sensors = get_sensor_list()
+    print(f"|-0-| Sensor list obtained: {sensors}")
 
     ## Look for sunrise sensor
     sensor_id = ""
     for sensor in sensors:
         if (sensor['name'] == "sunrise"):
-            print("Sunrise detector")
             sensor_id = sensor['id']
             # print(sensor_id)
 
     if (sensor_id == ""):
-        print("Sensor not found")
+        print("|-0-| Sunrise sensor not found")
         status = 400
         response_description = "Sensor not found"
     else:
-        print("Sensor found with id " + sensor_id)
+        print(f"|-0-| Sunrise sensor found with id {sensor_id}")
         # Get device information
-        response = get_shelly_device_state(
-            device_id=sensor_id,
+        shelly_status = get_shelly_device_state(
+            device_list=[sensor_id],
             url_base=url,
             api_key=api_key
         )
-        # Check for correct response
-        if (response['isok'] == True and
-            "data" in response.keys()):
-            if(response['data']['online'] == True):
-                input_data = response['data']['device_status']['input:0']
-                status = 200
-                if (input_data['state'] == True):
-                    response_description = "night"
-                else:
-                    response_description = "day"
-        else:
-            print("Response from Shelly KO")
-            status = 400
-            response_description = "Response from Shelly KO"
+        print(f"|-0-| Device status: {shelly_status}")
 
-    print("Status:")
-    print(status)
-    print("Reponse Description:")
-    print(response_description)
-    status = 200
+        # Check for status
+        if (shelly_status[0]['online'] == 1):
+            if (shelly_status[0]['status'] == True):
+                status = 200
+                response_description = "night"
+            else:
+                status = 200
+                response_description = "day"
+        else:
+            status = 400
+            response_description = "Device offline"
+
+    print(f"|-0-| Status: {status}")
+    print(f"|-0-| Reponse Description: {response_description}")
     return {
         "statusCode": status,
         "headers": {
@@ -65,5 +62,5 @@ def get_sunrise(event, context):
             "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
             "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,POST,DELETE"
         },
-        "body": "day"
+        "body": response_description
     }

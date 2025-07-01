@@ -10,6 +10,7 @@ from modules import (
     set_shelly_roller_position,
     set_shelly_roller_action,
     get_aqara_token,
+    get_aqara_device_state,
     set_aqara_roller_action
 )
 import json
@@ -19,85 +20,78 @@ import json
 ## aqara always return 0 
 def get_blind_state(event, context):
     ## Get Event parameters
-    print("Get Blind State -------------------------------------------")
+    print("|-0-| Get Blind State")
+    print("|-0-| No event parameters needed")
 
     # Get blind list
     blinds = get_blind_list()
-    print(blinds)
+    print(f"|-0-| Blind list obtained: {blinds}")
 
-    # Get status from each blind
-    response_description = []
-    status = 400
+    ## Get shelly status ------------------------------------------------------
+    print("|-0-| Getting Shelly blinds status")
+
+    # Get id list
+    device_ids = []
     for blind in blinds:
-    ## Check if body has the attributes
+        if (blind['type'] == "shelly"):
+            device_ids.append(blind['id'])
+    print(f"|-0-| Device ids: {device_ids}")
+    
+    # Get shelly token
+    api_key, url = get_shelly_token()
+    print("|-0-| Shelly token obtained")
+    
+    # Get device status
+    shelly_status = get_shelly_device_state(
+        device_list=device_ids,
+        api_key=api_key,
+        url_base=url
+    )
+    print(f"|-0-| Device status: {shelly_status}")
+
+    # Add names to response
+    for blind in shelly_status:
+        for blind_data in blinds:
+            if (blind['id'] == blind_data['id']):
+                blind['name'] = blind_data['name']
+    print(f"|-0-| Device status updated: {shelly_status}")
+
+    ## Get Aqara status ------------------------------------------------------
+    print("|-0-| Getting Aqara blinds status")
+
+    # Get id list
+    device_ids = []
+    for blind in blinds:
         if (blind['type'] == "aqara"):
-            print("Persiana Aqara, no tiene status")
-            status = 200
-            response_description.append(
-                {
-                    "name": blind['name'],
-                    "position": -1,
-                    "type": blind['type'],
-                    "online": True
-                }
-            )
-        elif (blind['type'] == "shelly"):
-            print("Persiana Shelly, obteniendo status")
+            device_ids.append(blind['id'])
+    print(f"|-0-| Device ids: {device_ids}")
 
-            # Get shelly token
-            api_key, url = get_shelly_token()
-            
-            # Get device status
-            response = get_shelly_device_state(
-                device_id=blind['id'],
-                api_key=api_key,
-                url_base=url
-            )
+    # Get device status
+    aqara_status = get_aqara_device_state(
+        device_list=device_ids,
+        api_key="",
+        url_base=""
+    )
+    print(f"|-0-| Device status: {aqara_status}")
 
-            # Check Shelly response
-            if (response['isok'] == True and
-                "data" in response.keys()):
-                if(response['data']['online'] == True):
-                    cover_data = response['data']['device_status']['cover:0']
-                    status = 200
-                    response_description.append(
-                        {
-                            "name": blind['name'],
-                            "position": cover_data['current_pos'],
-                            "type": blind['type'],
-                            "online": True
-                        }
-                    )                     
-                else:
-                    status = 200
-                    response_description.append(
-                        {
-                            "name": blind['name'],
-                            "position": -1,
-                            "type": blind['type'],
-                            "online": False
-                        }
-                    )
-            else:
-                print("Shelly response KO")
-                status = 400
-                response_description.append(
-                    {
-                        "name": blind['name'],
-                        "position": 0,
-                        "type": blind['type'],
-                        "online": False
-                    }
-                )
-        else:
-            print("Body is KO")
-            status = 400
-            response_description = 'Body is KO'
+    # Add names to response
+    for blind in aqara_status:
+        for blind_data in blinds:
+            if (blind['id'] == blind_data['id']):
+                blind['name'] = blind_data['name']
+    print(f"|-0-| Device status updated: {aqara_status}")
 
-    print("Status:")
-    print(status)
-    print("Reponse Description:")
-    print(response_description)
+    # Join all results ---------------------------------------
+    blinds_status = shelly_status + aqara_status
+    if (len(blinds_status) > 0):
+        status = 200
+        response_description = blinds_status
+    else:
+        status = 400
+        response_description = []
+
+    print(f"|-0-| Status: {status}")
+    print(f"|-0-| Reponse Description: {response_description}")
     return {
         "statusCode": status,
         "headers": {
@@ -115,19 +109,19 @@ def get_blind_state(event, context):
 ## aqara only action
 def set_blind_position(event, context):
     ## Get Event parameters
-    print("Set Blind Position -------------------------------------------")
-    # print(event)
+    print("|-0-| Set Blind Position")
     body = json.loads(event["body"])
-    print(body)
+    print(f"|-0-| Body: {body}")
 
    ## Check if body has the attributes
     if ("blind" in body.keys()):
         if ("position" in body.keys()):
-            print("Blind movement demanded by position")
-            print("Body check OK")
+            print("|-0-| Blind movement demanded by position")
+            print("|-0-| Body check OK")
 
             # Get blind list
             blinds = get_blind_list()
+            print(f"|-0-| Light list obtained: {blinds}")
 
             # Get blind ID if there is in the list
             blind_id = 'none'
@@ -137,8 +131,11 @@ def set_blind_position(event, context):
                     blind_type = blind['type']
 
             if (blind_type == 'shelly'):
+                print("|-0-| Shelly blind")
+
                 # Get token data
                 api_key, url = get_shelly_token()
+                print("|-0-| Token obtained")
 
                 # Set roller position
                 response = set_shelly_roller_position(
@@ -147,11 +144,12 @@ def set_blind_position(event, context):
                     api_key=api_key,
                     position=body['position']
                 )
+                print(f"|-0-| Response for action: {response}")
 
                 status = 200
                 response_description = f"Blind {body['blind']} fixed to {body['position']}"
             elif (blind_type == 'aqara'):
-                print("Aqara blind cannot be moved by position")
+                print("|-0-| Aqara blind cannot be moved by position")
                 status = 400
                 response_description = 'Aqara blind cannot be moved by position'
             else:
@@ -159,11 +157,12 @@ def set_blind_position(event, context):
                 status = 400
                 response_description = 'Blind not found'
         elif ("action" in body.keys()):
-            print("Blind movement demanded by action")
-            print("Body check OK")
+            print("|-0-| Blind movement demanded by action")
+            print("|-0-| Body check OK")
 
             # Get blind list
             blinds = get_blind_list()
+            print(f"|-0-| Light list obtained: {blinds}")
 
             # Get blind ID if there is in the list
             blind_id = 'none'
@@ -173,10 +172,11 @@ def set_blind_position(event, context):
                     blind_type = blind['type']
 
             if (blind_type == 'aqara'):
-                print("Persiana Aqara")
+                print("|-0-| Aqara blind")
 
                 # Get aqara token
                 api_key = get_aqara_token()
+                print("|-0-| Token obtained")
 
                 # Set aqara action
                 response = set_aqara_roller_action(
@@ -184,42 +184,43 @@ def set_blind_position(event, context):
                     api_key=api_key,
                     action=body['action']
                 )
+                print(f"|-0-| Response for action: {response}")
 
                 status = 200
                 response_description = f"Blind {body['blind']} set for {body['action']}"
             elif (blind_type == 'shelly'):
-                print("Persiana Shelly")
+                print("|-0-| Shelly blind")
 
                 # Get token data
                 api_key, url = get_shelly_token()
+                print("|-0-| Token obtained")
 
                 # Set shelly action
-                repsons_json = set_shelly_roller_action(
+                response = set_shelly_roller_action(
                     device_id=blind_id,
                     url_base=url,
                     api_key=api_key,
                     action=body['action']
                 )
+                print(f"|-0-| Response for action: {response}")
 
                 status = 200
                 response_description = f"Blind {body['blind']} set for {body['action']}"
             else:
-                print("Blind not found")
+                print("|-0-| Blind not found")
                 status = 400
                 response_description = 'Blind not found'
         else:
-            print("Body check KO")
+            print("|-0-| Body check KO")
             status = 400
             response_description = 'Body check KO'
     else:
-        print("Body check KO")
+        print("|-0-| Body check KO")
         status = 400
         response_description = 'Body check KO'
 
-    print("Status:")
-    print(status)
-    print("Reponse Description:")
-    print(response_description)
+    print(f"|-0-| Status: {status}")
+    print(f"|-0-| Reponse Description: {response_description}")
     return {
         "statusCode": status,
         "headers": {

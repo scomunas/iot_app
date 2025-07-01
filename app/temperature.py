@@ -11,16 +11,14 @@ import os
 ## Aqara registers will come in body 
 def set_temperature(event, context):
     ## Get Event parameters
-    print("Set Temperature Event -------------------------------------------")
-    # print(event)
+    print("|-0-| Set Temperature")
     body = json.loads(event["body"])
-    print("Body received:")
-    print(body)
+    print(f"|-0-| Body: {body}")
 
     ## Check if body has the attributes
     if ("sensor" in body.keys() and
         "temperature" in body.keys()):
-        print("Body check OK")
+        print("|-0-| Body check OK")
         event = {
                     "sensor": body['sensor'],
                     "temperature": body['temperature']
@@ -35,14 +33,12 @@ def set_temperature(event, context):
         status = 200
         response_description = 'Registro de temperatura insertado'
     else:
-        print("Body check KO")
+        print("|-0-| Body check KO")
         status = 400
         response_description = 'Petición mal formada'
 
-    print("Status:")
-    print(status)
-    print("Reponse Description:")
-    print(response_description)
+    print(f"|-0-| Status: {status}")
+    print(f"|-0-| Reponse Description: {response_description}")
     return {
         "statusCode": status,
         "headers": {
@@ -66,8 +62,10 @@ def fix_temperature(event, context):
 
     ## Get Netatmo Token
     access_token = get_netatmo_token()
+    print("|-0-| Token obtained")
 
     module_data = get_netatmo_data(access_token)
+    print(f"|-0-| Netatmo info: {response}")
 
     # Get data from all the sensors
     
@@ -91,10 +89,8 @@ def fix_temperature(event, context):
         status = 200
         response_description = 'Registro de temperatura insertado'
 
-    print("Status:")
-    print(status)
-    print("Reponse Description:")
-    print(response_description)
+    print(f"|-0-| Status: {status}")
+    print(f"|-0-| Reponse Description: {response_description}")
     return {
         "statusCode": status,
         "headers": {
@@ -128,7 +124,8 @@ def get_temperature(event, context):
             }
         )
 
-
+    print(f"|-0-| Status: 200")
+    print(f"|-0-| Reponse Description: {data_fix}")
     return {
         "statusCode": 200,
         "headers": {

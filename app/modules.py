@@ -157,18 +157,75 @@ def get_shelly_token():
     return api_key, url_base
 
 # Get state from one Shelly device
-def get_shelly_device_state(device_id, url_base, api_key):
-    url = url_base + "/device/status"
-    payload = 'auth_key=' + api_key + '&id=' + device_id
+def get_shelly_device_state(device_list, url_base, api_key):
+    url = url_base + "/v2/devices/api/get?auth_key=" + api_key
+    payload = json.dumps({
+        "ids": device_list,
+        "select": [
+            "status",
+        ],
+        "pick": {
+            "status": [
+                "switch:0",
+                "relays",
+                "input:0",
+                "cover:0"
+            ]
+        }
+        })
+    # print(payload)
     headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
         }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    response_json = response.json()
-    # print(response_json)
+    # print(response.json())
+
+    response_description = []
+    # Check Shelly response
+    for device in response.json():
+        if ("status" in device.keys()):
+            shelly_online = device['online'] 
+            if(shelly_online == 1):
+                # Check depends on version, if has relays or switch
+                if ("relays" in device['status'].keys()):
+                    device_status = device['status']['relays'][0]['ison']
+                elif ("switch:0" in device['status'].keys()):
+                    device_status = device['status']['switch:0']['output']
+                elif ("cover:0" in device['status'].keys()):
+                    device_status = device['status']['cover:0']['current_pos']
+                elif ("input:0" in device['status'].keys()):
+                    device_status = device['status']['input:0']
+                else:
+                    device_status = 'error'
+                response_description.append(
+                    {
+                        "id": device['id'],
+                        "status": device_status,
+                        "type": "shelly",
+                        "online": shelly_online
+                    }
+                )
+            else:
+                response_description.append(
+                    {
+                        "id": device['id'],
+                        "status": False,
+                        "type": "shelly",
+                        "online": shelly_online
+                    }
+                )
+        else:
+            response_description.append(
+                {
+                    "id": device['id'],
+                    "status": False,
+                    "type": "shelly",
+                    "online": False
+                }
+            )
     
-    return response_json
+    return response_description
 
 # Set position for a Shelly roller
 def set_shelly_roller_position(device_id, url_base, api_key, position):
@@ -187,33 +244,38 @@ def set_shelly_roller_position(device_id, url_base, api_key, position):
 
 #Set action (open/close/stop) for a Shelly roller
 def set_shelly_roller_action(device_id, url_base, api_key, action):
-    url = url_base + "/device/relay/roller/control"
+    url = url_base + "/v2/devices/api/set/cover?auth_key=" + api_key
     # print(url)
-    payload = 'auth_key=' + api_key + '&id=' + device_id + '&direction=' + action
-    # print(payload)
+    payload = json.dumps({
+        "id": device_id,
+        "channel": 0,
+        "position": action
+    })
     headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        }
+    'Content-Type': 'application/json'
+    }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    response_json = response.json()
     
-    return response_json
+    return response
 
 #Set action (on/off) for a Shelly Light
 def set_shelly_light_action(device_id, url_base, api_key, action):
-    url = url_base + "/device/relay/control"
+    url = url_base + "/v2/devices/api/set/switch?auth_key=" + api_key
     # print(url)
-    payload = 'auth_key=' + api_key + '&id=' + device_id + '&turn=' + action + '&channel=0'
+    payload = json.dumps({
+        "id": device_id,
+        "channel": 0,
+        "on": action == "on"
+        })
     # print(payload)
     headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
         }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    response_json = response.json()
     
-    return response_json
+    return response
 
 # Get token for use with Aqara API (for the moment with IFTTT)
 def get_aqara_token():
@@ -229,6 +291,21 @@ def get_aqara_token():
     api_key = data.get("api_key")
 
     return api_key
+
+# Get state from one Aqara device
+def get_aqara_device_state(device_list, url_base, api_key):
+    # No API for Aqara
+    response_description = []
+    for id in device_list:
+        response_description.append(
+            {
+                "id": id,
+                "status": -1,
+                "type": "aqara",
+                "online": True
+            })
+        
+    return response_description    
 
 # Set action (open/close/stop) for an aqara roller
 # Uses ifttt_app function
@@ -264,30 +341,65 @@ def get_govee_token():
     return api_key, url_base
 
 # Get state from one Shelly device
-def get_govee_light_status(device_id, url_base, api_key):
+def get_govee_light_status(device_list, url_base, api_key):
     url = url_base + "/router/api/v1/device/state"
-    sku, device = device_id.split("|")
-    request_id = sku + datetime.now().strftime("%d%m%Y%H%M%S")
-    payload = json.dumps({
-        "requestId": request_id,
-        "payload": {
-            "sku": sku,
-            "device": device
-        }
-    })
     headers = {
         'Govee-API-Key': api_key,
         'Content-Type': 'application/json' 
         }
+    
+    response_description = []
+    # Get all light status
+    for id in device_list:
+        sku, device = id.split("|")
+        request_id = sku + datetime.now().strftime("%d%m%Y%H%M%S")
+        payload = json.dumps({
+            "requestId": request_id,
+            "payload": {
+                "sku": sku,
+                "device": device
+            }
+        })
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response_json = response.json()
+        # print(response_json)
 
-    response = requests.request("POST", url, headers=headers, data=payload)
-    print(response.text)
-    response_json = response.json()
-    # print(response_json)
+        if (response_json['code'] == 200 and
+            "payload" in response_json.keys()):
+            # Look for capabilities
+            govee_online = False
+            govee_on_off = 0
+            for capability in response_json['payload']['capabilities']:
+                if (capability['instance'] == 'online'):
+                    govee_online = capability['state']['value']
+                if (capability['instance'] == 'powerSwitch'):
+                    govee_on_off = capability['state']['value']
+            if(govee_online == True):
+                if(govee_on_off == 1):
+                    light_data = True
+                else:
+                    light_data = False
+            response_description.append(
+                {
+                    "id": id,
+                    "status": light_data,
+                    "type": "govee",
+                    "online": govee_online
+                }
+            )
+        else:
+            response_description.append(
+                {
+                    "id": id,
+                    "status": False,
+                    "type": "govee",
+                    "online": False
+                }
+            )
 
-    return response_json
+    return response_description
 
-#Set action (on/off) for a Shelly Light
+# Set action (on/off) for a Shelly Light
 def set_govee_light_action(device_id, url_base, api_key, action):
     url = url_base + "/router/api/v1/device/control"
     sku, device = device_id.split("|")
@@ -380,7 +492,8 @@ def get_light_list():
     filename = "light_list.json"
     with open(filename, "r") as f:
         data = json.load(f)
+    lights = {}
     lights = data.get("lights")
     # print(lights)
-
+    
     return lights
