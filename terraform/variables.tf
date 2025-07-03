@@ -5,7 +5,7 @@ variable "versions" {
 
 variable "paths" {
   type    = list(string)
-  default = ["temperature", "blinds", "sunrise", "lights"]
+  default = ["temperature", "blinds", "sunrise", "lights", "login", "irrigation"]
 }
 
 variable "lambdas" {
@@ -71,6 +71,20 @@ variable "lambdas" {
       "handler" : "lights.set_light_action",
       "version" : "v1",
       "apiPath" : "lights",
+      "apiMethod" : "POST"
+    },
+    "login" = {
+      "name" : "app-v1-login",
+      "handler" : "login.login",
+      "version" : "v1",
+      "apiPath" : "login",
+      "apiMethod" : "POST"
+    },
+    "setIrrigationAction" = {
+      "name" : "app-v1-set-irrigation-action",
+      "handler" : "irrigation.set_irrigation_action",
+      "version" : "v1",
+      "apiPath" : "irrigation",
       "apiMethod" : "POST"
     }
   }

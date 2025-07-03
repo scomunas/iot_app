@@ -12,6 +12,7 @@ import boto3
 import os
 import requests
 import pytz
+import base64
 
 ## Insert event row on DB
 def insert_db(table_name, event_parameters, ttl_days):
@@ -203,7 +204,7 @@ def get_shelly_device_state(device_list, url_base, api_key):
                         "id": device['id'],
                         "status": device_status,
                         "type": "shelly",
-                        "online": shelly_online
+                        "online": True
                     }
                 )
             else:
@@ -212,7 +213,7 @@ def get_shelly_device_state(device_list, url_base, api_key):
                         "id": device['id'],
                         "status": False,
                         "type": "shelly",
-                        "online": shelly_online
+                        "online": False
                     }
                 )
         else:
@@ -431,6 +432,105 @@ def set_govee_light_action(device_id, url_base, api_key, action):
     
     return response_json
 
+# Get token for use over SmartThings from Samsung
+def get_tapo_token():
+    # You will need a ifttt_token.json file in the root with these attributes:
+    # {
+    #     "url": "xxxxxxxx",
+    #     "api_key": "xxxxxxx"
+    # }
+
+    # Get Tapo credentials
+    filename = "tapo_token.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    api_key = data.get("api_key")
+    url_base = data.get("url")
+
+    return api_key, url_base
+
+# Get state from one Tapo devices over Smarthings from Samsung
+# For the moment only for switches
+def get_tapo_device_state(device_list, url_base, api_key):
+    url = url_base + "/v1/devices/"
+    payload = {}
+    headers = {
+        'Authorization': f'Bearer {api_key}'
+    }
+
+    response_description = []
+    # Get Tapo Status for each one
+    for id in device_list:
+        url = url_base + "/devices/" + id + "/status"
+        # print(url)
+        # print(headers)
+        response = requests.request("GET", url, headers=headers, data=payload)
+        # print(response)
+        device_value = response.json()['components']['main']['switch']['switch']['value']
+        if (device_value == "on"):
+            switch_status = True
+            switch_online = True
+        elif (device_value == "off"):
+            switch_status = False
+            switch_online = True
+        else:
+            switch_status = False
+            switch_online = False
+        response_description.append(
+                    {
+                        "id": id,
+                        "status": switch_status,
+                        "type": "tapo",
+                        "online": switch_online
+                    }
+                )
+
+    return response_description
+
+# Set action (on/off) for a Tapo devices over Smarthings from Samsung
+def set_tapo_light_action(device_id, url_base, api_key, action):
+    url = url_base + "/devices/" + device_id + "/commands"
+    # print(url)
+    payload = json.dumps({
+        "commands": [
+            {
+            "component": "main",
+            "capability": "switch",
+            "command": action
+            }
+        ]
+    })
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    
+    return response
+
+# Set action (on/off) for a Tapo devices over Smarthings from Samsung
+def set_tapo_irrigation_action(device_id, url_base, api_key, action):
+    url = url_base + "/devices/" + device_id + "/commands"
+    # print(url)
+    payload = json.dumps({
+        "commands": [
+            {
+            "component": "main",
+            "capability": "switch",
+            "command": action
+            }
+        ]
+    })
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    
+    return response
+
 # Get sensor devices list
 def get_sensor_list():
     # You will need a sensor_list.json file with the list of sensors and these attributes:
@@ -497,3 +597,43 @@ def get_light_list():
     # print(lights)
     
     return lights
+
+# Get light devices list
+def get_irrigation_list():
+    # You will need a light_list.json file with the list of blinds and these attributes:
+    # {
+    #     "irrigation": [
+    #         {
+    #             "name": "comdedor",
+    #             "type": "shelly",
+    #             "id": "5432045e3fb8"
+    #         }
+    #     ]
+    # }
+
+    # Get irrigation list
+    filename = "irrigation_list.json"
+    with open(filename, "r") as f:
+        data = json.load(f)
+    irrigation = {}
+    irrigation = data.get("irrigation")
+    # print(lights)
+    
+    return irrigation
+
+# Decode user for basic auth
+def decode_basic_auth(auth_header: str):
+    # Ejemplo de header: "Basic YWRtaW46MTIzNA=="
+    if not auth_header.startswith("Basic "):
+        raise ValueError("No es un encabezado Basic Auth válido")
+    
+    # Extraer la parte codificada
+    encoded_credentials = auth_header.split(" ")[1]
+
+    # Decodificar base64 → bytes → string
+    decoded_bytes = base64.b64decode(encoded_credentials)
+    decoded_str = decoded_bytes.decode("utf-8")
+
+    # Separar usuario y contraseña
+    username, password = decoded_str.split(":", 1)
+    return username, password

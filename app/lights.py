@@ -10,7 +10,10 @@ from modules import (
     set_shelly_light_action,
     get_govee_token,
     get_govee_light_status,
-    set_govee_light_action
+    set_govee_light_action,
+    get_tapo_token,
+    get_tapo_device_state,
+    set_tapo_light_action
 )
 import json
 
@@ -82,9 +85,38 @@ def get_light_state(event, context):
             if (light['id'] == light_data['id']):
                 light['name'] = light_data['name']
     print(f"|-0-| Device status updated: {govee_status}")
+
+    # Get tapo status ------------------------------------------------------
+    print("|-0-| Getting Tapo lights status")
+
+    # Get id list
+    device_ids = []
+    for light in lights:
+        if (light['type'] == "tapo"):
+            device_ids.append(light['id'])
+    print(f"|-0-| Device ids: {device_ids}")
+
+    # Get shelly token
+    api_key, url_base = get_tapo_token()
+    print("|-0-| Tapo token obtained")
+    
+    # Get device status
+    tapo_status = get_tapo_device_state(
+        device_list=device_ids,
+        api_key=api_key,
+        url_base=url_base
+    )
+    print(f"|-0-| Device status: {tapo_status}")
+
+    # Add names to response
+    for light in tapo_status:
+        for light_data in lights:
+            if (light['id'] == light_data['id']):
+                light['name'] = light_data['name']
+    print(f"|-0-| Device status updated: {tapo_status}")
  
     # Join all results ---------------------------------------
-    lights_status = shelly_status + govee_status
+    lights_status = shelly_status + govee_status + tapo_status
     if (len(lights_status) > 0):
         status = 200
         response_description = lights_status
@@ -167,8 +199,26 @@ def set_light_action(event, context):
 
                 status = 200
                 response_description = f"Light {body['light']} set for {body['action']}"
-            else:
+            elif (light_type == 'tapo'):
+                print("|-0-| Tapo light")
+
+                # Get token data
+                api_key, url = get_tapo_token()
                 print("|-0-| Token obtained")
+
+                # Set shelly action
+                response = set_tapo_light_action(
+                    device_id=light_id,
+                    url_base=url,
+                    api_key=api_key,
+                    action=body['action']
+                )
+                print(f"|-0-| Response for action: {response}")
+
+                status = 200
+                response_description = f"Light {body['light']} set for {body['action']}"
+            else:
+                print("|-0-| Light not found")
                 status = 400
                 response_description = 'Light not found'
         else:

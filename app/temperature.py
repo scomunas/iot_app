@@ -65,7 +65,7 @@ def fix_temperature(event, context):
     print("|-0-| Token obtained")
 
     module_data = get_netatmo_data(access_token)
-    print(f"|-0-| Netatmo info: {response}")
+    print(f"|-0-| Netatmo info: {module_data}")
 
     # Get data from all the sensors
     

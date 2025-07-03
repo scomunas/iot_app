@@ -59,6 +59,21 @@
             "name": "led_navidad_2",
             "type": "govee",
             "id": "H61A0|B8:D3:D4:AD:FC:7B:0A:4F"
+        },
+        {
+            "name": "terraza",
+            "type": "tapo",
+            "id": "16a61fb3-2df4-457c-a882-99c219ae9745"
+        },
+        {
+            "name": "mesita_nico",
+            "type": "tapo",
+            "id": "fa845e91-6bc8-4fae-b52f-33421d637741"
+        },
+        {
+            "name": "reno_navidad",
+            "type": "tapo",
+            "id": "20fc9e6e-cb54-422d-90c3-bdf9e736fcd5"
         }
     ]
 }
