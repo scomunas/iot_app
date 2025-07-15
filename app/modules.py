@@ -466,24 +466,34 @@ def get_tapo_device_state(device_list, url_base, api_key):
         # print(headers)
         response = requests.request("GET", url, headers=headers, data=payload)
         # print(response)
-        device_value = response.json()['components']['main']['switch']['switch']['value']
-        if (device_value == "on"):
-            switch_status = True
-            switch_online = True
-        elif (device_value == "off"):
-            switch_status = False
-            switch_online = True
+        if (response.status_code < 299):
+            device_value = response.json()['components']['main']['switch']['switch']['value']
+            if (device_value == "on"):
+                switch_status = True
+                switch_online = True
+            elif (device_value == "off"):
+                switch_status = False
+                switch_online = True
+            else:
+                switch_status = False
+                switch_online = False
+            response_description.append(
+                        {
+                            "id": id,
+                            "status": switch_status,
+                            "type": "tapo",
+                            "online": switch_online
+                        }
+                    )
         else:
-            switch_status = False
-            switch_online = False
-        response_description.append(
-                    {
-                        "id": id,
-                        "status": switch_status,
-                        "type": "tapo",
-                        "online": switch_online
-                    }
-                )
+            response_description.append(
+                        {
+                            "id": id,
+                            "status": False,
+                            "type": "tapo",
+                            "online": False
+                        }
+                    )
 
     return response_description
 
